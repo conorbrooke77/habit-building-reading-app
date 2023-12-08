@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="16dp">
+
+    <ImageView
+        android:id="@+id/imageView_cloudUpload"
+        android:layout_width="264dp"
+        android:layout_height="238dp"
+        android:layout_marginBottom="16dp"
+        android:contentDescription="@string/upload_prompt"
+        android:src="@drawable/drag_drop_icon" />
+
+    <TextView
+        android:id="@+id/textView_blockContent"
+        android:layout_width="wrap_content"
+        android:layout_height="56dp"
+        android:layout_marginBottom="16dp"
+        android:textAlignment="center"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/textView_uploadPrompt"
+        android:layout_width="wrap_content"
+        android:layout_height="68dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/upload_prompt"
+        android:textAlignment="center"
+        android:textSize="20sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_browseFiles"
+        android:layout_width="164dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:background="@color/PUMPKIN"
+        android:text="@string/browse_files"
+        android:textColor="#fff" />
+</LinearLayout>
