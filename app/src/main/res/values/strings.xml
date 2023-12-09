@@ -2,4 +2,5 @@
     <string name="app_name">BookByte</string>
     <string name="upload_prompt">Upload your reading materials here.</string>
     <string name="browse_files">Browse Files</string>
+    <string name="show_files">Show Reading Material</string>
 </resources>
