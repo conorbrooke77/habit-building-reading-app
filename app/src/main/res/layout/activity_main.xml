@@ -12,7 +12,6 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginBottom="16dp"
-        android:contentDescription="@string/upload_prompt"
         android:src="@drawable/hamburger_btn" />
 
     <ImageView
@@ -48,7 +47,7 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:layout_gravity="center"
-        android:id="@+id/button_browseFiles2"
+        android:id="@+id/button_showMaterial"
         android:layout_width="164dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"

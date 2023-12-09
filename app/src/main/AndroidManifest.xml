@@ -14,6 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BookByte">
         <activity
+            android:name=".SettingsActivity"
+            android:exported="false" />
+        <activity
             android:name=".PdfListActivity"
             android:exported="false" />
         <activity
