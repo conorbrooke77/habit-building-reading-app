@@ -6,7 +6,7 @@ import android.net.Uri
 import android.view.*
 import android.widget.ArrayAdapter
 
-class PdfListAdapter(private val context: Context, private val pdfList: List<String>) : ArrayAdapter<String>(context, 0, pdfList) {
+class PdfListAdapter(private val classContext: Context, private val pdfList: List<String>) : ArrayAdapter<String>(classContext, 0, pdfList) {
 
     // This method provides the view for each item in the list
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
