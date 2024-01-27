@@ -17,7 +17,7 @@
             android:name=".SettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".PdfListActivity"
+            android:name=".PDF.PdfListActivity"
             android:exported="false" />
         <activity
             android:name=".PdfViewerActivity"

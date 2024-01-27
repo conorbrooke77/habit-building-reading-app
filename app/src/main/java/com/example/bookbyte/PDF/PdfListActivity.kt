@@ -1,8 +1,9 @@
-package com.example.bookbyte
+package com.example.bookbyte.PDF
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ListView
+import com.example.bookbyte.R
 
 class PdfListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -1,10 +1,10 @@
-package com.example.bookbyte
+package com.example.bookbyte.PDF
 
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import android.view.*
 import android.widget.ArrayAdapter
+import com.example.bookbyte.DEBUG
+import com.example.bookbyte.R
 
 class PdfListAdapter(private val classContext: Context, private val pdfList: List<String>) : ArrayAdapter<String>(classContext, 0, pdfList) {
 
@@ -35,13 +35,11 @@ class PdfListAdapter(private val classContext: Context, private val pdfList: Lis
         viewHolder.textView.text = "Reading Material: ${position + 1}"
 
         // Set an OnClickListener to handle clicks on the list item
+
         rowView.setOnClickListener {
-            // Create an intent to start PdfViewerActivity with the selected PDF URI
-            val intent = Intent(context, PdfViewerActivity::class.java).apply {
-                putExtra("PDF_URI", pdf)
-            }
-            context.startActivity(intent)
+            DEBUG.messageBox(classContext, "Test")
         }
+
         return rowView
     }
 }
