@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -24,6 +23,15 @@
         android:src="@drawable/drag_drop_icon"
         android:layout_gravity="center"/>
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:indeterminate="false"
+        android:max="100"/>
+
     <TextView
         android:layout_gravity="center"
         android:id="@+id/textView_uploadPrompt"
@@ -45,14 +53,5 @@
         android:text="@string/browse_files"
         android:textColor="#fff" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:layout_gravity="center"
-        android:id="@+id/button_showMaterial"
-        android:layout_width="164dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:background="@color/PUMPKIN"
-        android:text="@string/show_files"
-        android:textColor="#fff" />
 
 </LinearLayout>

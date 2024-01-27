@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "615978450760",
-    "project_id": "habit-building-reading-app",
-    "storage_bucket": "habit-building-reading-app.appspot.com"
+    "project_number": "720315856716",
+    "project_id": "habit-building-reading-a-bfcfb",
+    "storage_bucket": "habit-building-reading-a-bfcfb.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:615978450760:android:3f1c21293a7ca1d190fd7d",
+        "mobilesdk_app_id": "1:720315856716:android:f23e4f40a630dc1b2241e9",
         "android_client_info": {
           "package_name": "com.example.bookbyte"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDVD9uOYvNaCSDEX8TQnLUj9Zs9nIYmbMk"
+          "current_key": "AIzaSyD6-vXMVU1y6mDO2P8OZMx1jieYOjdimD4"
         }
       ],
       "services": {
