@@ -15,7 +15,6 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.firebase.Firebase
-import com.google.firebase.app
 import com.google.firebase.storage.storage
 
 class PdfUploadActivity : AppCompatActivity() {
