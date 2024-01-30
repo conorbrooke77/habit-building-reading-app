@@ -19,6 +19,9 @@
         <activity
             android:name=".SettingsActivity"
             android:exported="false" />
+        <activity android:name=".Segmentation.SegmentedTextViewerActivity"
+            android:exported="false" />
+
 
         <!-- Set PdfUploadActivity as the launcher activity -->
         <activity android:name=".PdfUploadActivity"

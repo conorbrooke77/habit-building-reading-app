@@ -14,6 +14,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.bookbyte.Segmentation.SegmentedTextViewerActivity
 import com.google.firebase.Firebase
 import com.google.firebase.storage.storage
 
@@ -80,6 +81,9 @@ class PdfUploadActivity : AppCompatActivity() {
         uploadTask.addOnSuccessListener {
             DEBUG.consoleMessage("Upload Successful")
             progressBar.visibility = View.GONE // Hide the progress bar on failure
+
+            val intent = Intent(this, SegmentedTextViewerActivity::class.java)
+            startActivity(intent)
 
         }.addOnFailureListener {
             DEBUG.consoleMessage("Upload Failed")
