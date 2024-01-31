@@ -11,7 +11,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
-class SegmentedTextViewerActivity(private val segmentWordSize: Int): AppCompatActivity() {
+class SegmentedTextViewerActivity(): AppCompatActivity() {
 
     private lateinit var databaseRef: DatabaseReference
     private lateinit var segmentedData: String
@@ -29,6 +29,7 @@ class SegmentedTextViewerActivity(private val segmentWordSize: Int): AppCompatAc
                 // This method is called once with the initial value and whenever data changes
                 DEBUG.consoleMessage("Database Data Change Made")
                 segmentedData = dataSnapshot.getValue(String::class.java).toString()
+                updateUI(segmentedData)
             }
 
             override fun onCancelled(error: DatabaseError) {

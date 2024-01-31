@@ -3,4 +3,18 @@
     <string name="upload_prompt">Upload your reading materials here.</string>
     <string name="browse_files">Browse Files</string>
     <string name="show_files">Show Reading Material</string>
+    <string name="initialStreak">00</string>
+    <string name="iconImg">This is an image. 42.</string>
+    <string name="sample_lorem_ipsum">
+        Porttitor, dolor diam hendrerit libero pharetra id.nnEtiam vestibulum odio ut ipsum commodo faucibus.
+        Integer rhoncus, eros et dignissim porta, quam tellus mattis risus, sed ultrices tortor mi sed sapien.
+        \n\n In lacinia, tortor ac finibus euismod, neque
+        felis condimentum purus, ut lobortis diam nulla quis dolor. Integer finibus tempus erat, quis faucibus libero pharetra id. Etiam fringilla purus lacus, eu
+        imperdiet ligula facilisis vehicula.
+        \n\n Etiam vel bibendum est, at pretium lectus. In malesuada sapien nec neque feugiat, ac viverra condimentum.
+        Neque felis condimentum purus, ut lobortis diam nulla quis dolor.
+        \n\n In lacinia, tortor ac finibus euismod, neque felis condimentum purus,
+        ut lobortis diam nulla quis dolor. Integer finibus tempus erat, quis faucibus libero pharetra id. Etiam fringilla purus lacus, eu imperdiet
+        ligula facilisis vehicula.\n\n
+    </string>
 </resources>
