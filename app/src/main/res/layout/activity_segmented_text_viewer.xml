@@ -92,7 +92,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="30dp"
                 android:background="#FF7816"
-                android:text="temp"
+                android:text="@string/finishSegmentBtnText"
                 android:textColor="#FFF"
                 android:textSize="15sp"
                 android:textStyle="bold"
