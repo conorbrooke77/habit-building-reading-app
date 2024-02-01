@@ -18,4 +18,5 @@
         ligula facilisis vehicula.\n\n
     </string>
     <string name="finishSegmentBtnText">Finish Segment</string>
+    <string name="no_data_available">No Data Available</string>
 </resources>

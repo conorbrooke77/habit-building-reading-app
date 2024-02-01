@@ -14,7 +14,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.example.bookbyte.Segmentation.SegmentedTextViewerActivity
+import com.example.bookbyte.segmentation.SegmentedTextViewerActivity
 import com.google.firebase.Firebase
 import com.google.firebase.storage.storage
 
@@ -40,9 +40,9 @@ class PdfUploadActivity : AppCompatActivity() {
 
         grantPermissionToReadFromStorage()
 
-        browseFiles = findViewById<AppCompatButton>(R.id.button_browseFiles)
-        hamburgerButton = findViewById<ImageView>(R.id.hamburger_btn)
-        progressBar = findViewById<ProgressBar>(R.id.progressBar)
+        browseFiles = findViewById(R.id.button_browseFiles)
+        hamburgerButton = findViewById(R.id.hamburger_btn)
+        progressBar = findViewById(R.id.progressBar)
 
         progressBar.visibility = View.GONE // Initially, the progress bar is not visible
 
@@ -122,7 +122,7 @@ class PdfUploadActivity : AppCompatActivity() {
         builder.apply {
             setTitle("Permission Required")
             setMessage("This app requires access to your external storage to function properly. Please grant the permission.")
-            setPositiveButton("OK") { dialog, which ->
+            setPositiveButton("OK") { _, _ ->
                 // Try again to request the permission
                 ActivityCompat.requestPermissions(
                     this@PdfUploadActivity,
@@ -130,7 +130,7 @@ class PdfUploadActivity : AppCompatActivity() {
                     PERMISSIONS_REQUEST_TO_READ_STORAGE
                 )
             }
-            setNegativeButton("Cancel") { dialog, which ->
+            setNegativeButton("Cancel") { dialog, _ ->
                 dialog.dismiss()
             }
         }

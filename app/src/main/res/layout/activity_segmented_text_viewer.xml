@@ -19,8 +19,9 @@
 
         <ImageView
             android:id="@+id/hamburgerBtn"
-            android:layout_width="102dp"
+            android:layout_width="90dp"
             android:layout_height="match_parent"
+            android:layout_margin="5dp"
             android:contentDescription="@string/iconImg"
             android:scaleType="centerInside"
             android:src="@drawable/hamburger_btn" />
@@ -62,9 +63,13 @@
         android:id="@+id/segmentScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="25dp">
+        android:scrollbarThumbVertical="@drawable/scrollbar_thumb"
+        android:scrollbarTrackVertical="@drawable/scrollbar_track"
+        android:fadeScrollbars="true"
+        android:scrollbarAlwaysDrawVerticalTrack="false"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="20dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -85,12 +90,12 @@
                 android:textSize="21sp" />
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/button"
+                android:id="@+id/completeSegmentBtn"
                 android:layout_width="170dp"
                 android:layout_height="55dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="30dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="60dp"
                 android:background="#FF7816"
                 android:text="@string/finishSegmentBtnText"
                 android:textColor="#FFF"
