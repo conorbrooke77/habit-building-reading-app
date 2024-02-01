@@ -10,37 +10,63 @@ import androidx.appcompat.widget.AppCompatButton
 import com.example.bookbyte.App
 import com.example.bookbyte.Dashboard
 import com.example.bookbyte.R
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.storage.FirebaseStorage
 
 class SegmentedTextViewerActivity(): AppCompatActivity() {
 
-    private lateinit var databaseRef: DatabaseReference
     private lateinit var completeSegmentBtn: AppCompatButton
+    private lateinit var readingStreak: TextView
     private var segmentedData: String? = null
+    private var secondSegment: String? = null
     private var valueEventListener: ValueEventListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_segmented_text_viewer)
 
-        databaseRef = FirebaseDatabase.getInstance().getReference("/segmentedText")
+        readingStreak = findViewById(R.id.readingStreak)
+        readingStreak.text = '0' + App.getReadingStreak(this).toString()
 
-        valueEventListener = object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                segmentedData = dataSnapshot.getValue(String::class.java)
-                updateUI(segmentedData)
-            }
+        if (intent.getStringExtra("secondSegmentKey") == null) {
+            // Reference to your Firebase Cloud Storage bucket
+            val storageRef = FirebaseStorage.getInstance().reference.child("parsedTexts")
 
-            override fun onCancelled(error: DatabaseError) {
-                Log.e("SegmentedTextViewer", "Database read failed", error.toException())
-            }
+            // List all files in the directory
+            storageRef.listAll()
+                .addOnSuccessListener { listResult ->
+                    val files = listResult.items
+
+                    val sortedFiles = files.sortedByDescending { it.name }
+                    if (sortedFiles.isNotEmpty()) {
+                        // Get the most recent file
+                        val recentFile = sortedFiles.first()
+
+                        // Download the file as a string
+                        recentFile.getBytes(Long.MAX_VALUE).addOnSuccessListener { bytes ->
+                            val content = String(bytes)
+
+                            val midpoint = content.length / 2
+
+                            // Split the string into two halves
+                            val firstSegment = content.substring(0, midpoint)
+                            secondSegment = content.substring(midpoint)
+
+
+                            // Update the UI with the first half or as needed
+                            updateUI(firstSegment)
+                        }.addOnFailureListener {
+                            // Handle any errors
+                            Log.e("SegmentedTextViewer", "Failed to download file", it)
+                        }
+                    }
+                }.addOnFailureListener { exception ->
+                    Log.e("SegmentedTextViewer", "Failed to list files", exception)
+                }
+        } else {
+            // Update the UI with the first half or as needed
+            updateUI(intent.getStringExtra("secondSegmentKey"))
         }
-
-        databaseRef.addValueEventListener(valueEventListener!!)
 
         completeSegmentBtn = findViewById(R.id.completeSegmentBtn)
 
@@ -50,14 +76,9 @@ class SegmentedTextViewerActivity(): AppCompatActivity() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        valueEventListener?.let { databaseRef.removeEventListener(it) }
-    }
 
     private fun updateUI(segmentedData: String?) {
-        val textView: TextView = findViewById(R.id.segmentedTextView)
-        textView.text = segmentedData ?: getString(R.string.no_data_available)
+        findViewById<TextView>(R.id.segmentedTextView).text = segmentedData
     }
 
     private fun showDialog() {
@@ -77,7 +98,7 @@ class SegmentedTextViewerActivity(): AppCompatActivity() {
         App.saveReadingStreak(++dailyStreak, this)
 
         val intent = Intent(this, Dashboard::class.java)
-
+        intent.putExtra("secondSegmentKey", secondSegment)
         startActivity(intent)
         finish() // Call finish() after starting the new activity
 
