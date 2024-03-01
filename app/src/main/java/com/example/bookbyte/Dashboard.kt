@@ -2,6 +2,7 @@ package com.example.bookbyte
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
@@ -16,19 +17,21 @@ class Dashboard(): AppCompatActivity() {
         setContentView(R.layout.activity_dashboard)
 
         readingStreak = findViewById(R.id.readingStreak)
-        readingStreak.text = '0' + App.getReadingStreak(this).toString()
+        readingStreak.text = App.displayReadingStreak(this)
 
-        // Retrieve the secondSegment string
-        val secondSegment = intent.getStringExtra("secondSegmentKey")
+        val secondSegment = intent.getStringExtra("secondSegment")
+
         btn = findViewById(R.id.button)
-
         // Set up the click listener
         btn.setOnClickListener {
-            val intent = Intent(this, SegmentedTextViewerActivity::class.java)
-            intent.putExtra("secondSegmentKey", secondSegment)
+            val intent = Intent(this, SegmentedTextViewerActivity::class.java).apply {
+                putExtra("secondSegment", secondSegment)
+            }
             startActivity(intent)
-            finish()
         }
+
+        Log.e("Dashboard", "Has loaded!")
+
     }
 
 }

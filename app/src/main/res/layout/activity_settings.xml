@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#000000">
+    android:background="#000000"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/textView_settings"
@@ -13,16 +12,36 @@
         android:layout_height="80dp"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center"
+        android:layout_marginTop="16dp"
         android:text="Settings"
-        android:textSize="35sp"
         android:textColor="#FFFFFF"
-        android:layout_marginTop="16dp"/>
+        android:textSize="35sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="540dp"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/button_library"
+            android:layout_width="140dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="#FF9A3D"
+            android:text="Library"
+            android:textSize="17dp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/button_back"
-        android:layout_width="100dp"
+        android:layout_width="120dp"
         android:layout_height="50dp"
-        android:layout_marginTop="550dp"
-        android:layout_marginLeft="10dp"
-        android:text="Back" />
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="0dp"
+        android:backgroundTint="#D5181E"
+        android:text="Go Back" />
+
 </LinearLayout>

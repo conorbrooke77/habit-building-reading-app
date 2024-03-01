@@ -79,14 +79,14 @@ class PdfUploadActivity : AppCompatActivity() {
         val uploadTask = pdfRef.putFile(uri)
 
         uploadTask.addOnSuccessListener {
-            DEBUG.consoleMessage("Upload Successful")
+            DEBUG.consoleMessage("Upload Successful : PdfUploadActivity")
             progressBar.visibility = View.GONE // Hide the progress bar on failure
 
             val intent = Intent(this, SegmentedTextViewerActivity::class.java)
             startActivity(intent)
 
         }.addOnFailureListener {
-            DEBUG.consoleMessage("Upload Failed")
+            DEBUG.consoleMessage("Upload Failed : PdfUploadActivity")
             progressBar.visibility = View.GONE // Hide the progress bar on failure
 
         }.addOnProgressListener { taskSnapshot ->
