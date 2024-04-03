@@ -2,12 +2,15 @@ package com.example.bookbyte
 
 import android.Manifest
 import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.ProgressBar
 import androidx.activity.result.contract.ActivityResultContracts
@@ -15,24 +18,27 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.bookbyte.segmentation.SegmentedTextViewerActivity
+import com.google.android.material.button.MaterialButton
 import com.google.firebase.Firebase
 import com.google.firebase.storage.storage
 
 class PdfUploadActivity : AppCompatActivity() {
 
-    private lateinit var browseFiles: AppCompatButton
-    private lateinit var hamburgerButton: ImageView
+//    private lateinit var browseFiles: AppCompatButton
+//    private lateinit var hamburgerButton: ImageView
     private lateinit var progressBar: ProgressBar
+    private lateinit var uploadBtn: MaterialButton
 
-    private val pickPdfResultLauncher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()) { result ->
 
-        if (result.resultCode == RESULT_OK) {
-            result.data?.data?.also { uri: Uri ->
-                uploadPdfToFirebase(uri)
-            }
-        }
-    }
+//    private val pickPdfResultLauncher = registerForActivityResult(
+//        ActivityResultContracts.StartActivityForResult()) { result ->
+//
+//        if (result.resultCode == RESULT_OK) {
+//            result.data?.data?.also { uri: Uri ->
+//                uploadPdfToFirebase(uri)
+//            }
+//        }
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,19 +46,41 @@ class PdfUploadActivity : AppCompatActivity() {
 
         grantPermissionToReadFromStorage()
 
-        browseFiles = findViewById(R.id.button_browseFiles)
-        hamburgerButton = findViewById(R.id.hamburger_btn)
-        progressBar = findViewById(R.id.progressBar)
+//        browseFiles = findViewById(R.id.button_browseFiles)
+//        hamburgerButton = findViewById(R.id.hamburger_btn)
+//        progressBar = findViewById(R.id.progressBar)
+//
+//        progressBar.visibility = View.GONE // Initially, the progress bar is not visible
+//
+//
+//        browseFiles.setOnClickListener {
+//            pickPdfFile()
+//        }
+//
+//        hamburgerButton.setOnClickListener {
+//            openSettingsActivity()
+//        }
+        uploadBtn = findViewById(R.id.upload_btn)
+        uploadBtn.setOnClickListener {
 
-        progressBar.visibility = View.GONE // Initially, the progress bar is not visible
+            // When you want to show the custom dialog
+            val dialog = Dialog(this)
+            dialog.setContentView(R.layout.custom_warning_dialog)
 
+//            val etTotalWords = dialog.findViewById<EditText>(R.id.etTotalWords)
+//            val btnIncreaseWordCount = dialog.findViewById<Button>(R.id.btnIncreaseWordCount)
+//            val btnConfirm = dialog.findViewById<Button>(R.id.btnConfirm)
+//
+//            btnIncreaseWordCount.setOnClickListener {
+//                // Logic to increase word count
+//            }
+//
+//            btnConfirm.setOnClickListener {
+//                // Logic to confirm the action
+//                dialog.dismiss()
+//            }
 
-        browseFiles.setOnClickListener {
-            pickPdfFile()
-        }
-
-        hamburgerButton.setOnClickListener {
-            openSettingsActivity()
+            dialog.show()
         }
 
     }
@@ -61,13 +89,13 @@ class PdfUploadActivity : AppCompatActivity() {
         val intent = Intent(this, SettingsActivity::class.java)
         startActivity(intent)
     }
-    private fun pickPdfFile() {
-        val chooseFileIntent = Intent(Intent.ACTION_GET_CONTENT).apply {
-            type = "application/pdf"
-        }
-
-        pickPdfResultLauncher.launch(chooseFileIntent)
-    }
+//    private fun pickPdfFile() {
+//        val chooseFileIntent = Intent(Intent.ACTION_GET_CONTENT).apply {
+//            type = "application/pdf"
+//        }
+//
+//        pickPdfResultLauncher.launch(chooseFileIntent)
+//    }
 
     private fun uploadPdfToFirebase(uri: Uri) {
         val storageRef = Firebase.storage.reference

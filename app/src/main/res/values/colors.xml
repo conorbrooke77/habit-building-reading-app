@@ -8,4 +8,11 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="PUMPKIN">#FF7816</color>
+    <color name="colorSecondary">#FF602E</color>
+    <color name="colorPrimaryDark">#838383</color>
+    <color name="gray">#8A8A8A</color>
+
+    <color name="forgotPasswordColorAccent">#FF9457</color>
+    <color name="activeColor">#FF8C67</color>
+    <color name="inactiveColor">#FFC1AD</color>
 </resources>

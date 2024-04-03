@@ -14,6 +14,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BookByte">
         <activity
+            android:name=".UserLibraryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DifficultySelectionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ForgotPasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RegisterActivity"
+            android:exported="false" />
+        <activity
             android:name=".BookDetailActivity"
             android:exported="false" />
         <activity
@@ -25,20 +37,29 @@
             android:name=".SettingsActivity"
             android:exported="false" />
         <activity
+            android:name=".PdfUploadActivity"
+            android:exported="false" />
+        <activity
             android:name=".segmentation.SegmentedTextViewerActivity"
             android:exported="true" />
         <activity
             android:name=".Dashboard"
             android:exported="false" /> <!-- Set PdfUploadActivity as the launcher activity -->
         <activity
-            android:name=".PdfUploadActivity"
-            android:exported="true">
+            android:name=".LoginActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="true"
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>

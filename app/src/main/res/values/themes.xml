@@ -12,6 +12,9 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="android:windowActivityTransitions">true</item>
+        <item name="android:windowEnterTransition">@transition/slide_in_right</item>
+        <item name="android:windowExitTransition">@transition/slide_out_left</item>
     </style>
   <!-- Base application theme. -->
     <style name="Base.Theme.BookByte" parent="Theme.Material3.DayNight.NoActionBar">
