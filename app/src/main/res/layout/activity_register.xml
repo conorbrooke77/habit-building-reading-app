@@ -124,8 +124,14 @@
             android:paddingTop="25dp"
             android:paddingBottom="25dp" />
 
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/buttonContinue"
+            android:id="@+id/buttonRegister"
             android:layout_width="178dp"
             android:layout_height="0dp"
             android:layout_gravity="end"

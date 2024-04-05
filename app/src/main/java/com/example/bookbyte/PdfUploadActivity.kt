@@ -1,6 +1,7 @@
 package com.example.bookbyte
 
 import android.Manifest
+import android.app.ActivityOptions
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
@@ -165,5 +166,10 @@ class PdfUploadActivity : AppCompatActivity() {
         // Show the AlertDialog
         val dialog = builder.create()
         dialog.show()
+    }
+
+    fun navigateToLibrary(view: View) {
+        val intent = Intent(this, UserLibraryActivity::class.java)
+        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
     }
 }

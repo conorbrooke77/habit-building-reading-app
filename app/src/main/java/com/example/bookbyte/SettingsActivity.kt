@@ -1,27 +1,35 @@
 package com.example.bookbyte
 
+import android.app.ActivityOptions
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
+import android.widget.Toast
 import com.example.bookbyte.segmentation.SegmentedTextViewerActivity
+import com.google.firebase.auth.FirebaseAuth
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
+    }
 
-        val libraryButton: Button = findViewById(R.id.button_library) // Assuming you have a button in your layout
-        libraryButton.setOnClickListener {
-            val intent = Intent(this, LibraryActivity::class.java)
-            startActivity(intent)
-        }
+    fun navigateToLibrary(view: View) {
+        val intent = Intent(this, UserLibraryActivity::class.java)
+        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
+    }
 
-        val backButton = findViewById<Button>(R.id.button_back)
-        backButton.setOnClickListener {
-            val intent = Intent(this, PdfUploadActivity::class.java)
-            startActivity(intent)
-        }
+    fun logout(view: View) {
+        // Sign out the current user
+        FirebaseAuth.getInstance().signOut()
 
+        val intent = Intent(this, LoginActivity::class.java)
+        // Clearing the activity stack to prevent the user from going back to the MainActivity after logging out
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+
+        Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show()
     }
 }

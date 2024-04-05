@@ -24,7 +24,9 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_weight="3"
-                android:src="@drawable/hamburger_btn" />
+                android:src="@drawable/hamburger_btn"
+                android:onClick="navigateToSettings"
+                />
 
             <TextView
                 android:layout_width="wrap_content"
