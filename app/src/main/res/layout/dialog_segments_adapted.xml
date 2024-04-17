@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:fontFamily="@font/open_sans_bold"
-        android:text="Congratulations!"
+        android:text="Segment Size Updated"
         android:textColor="#000000"
         android:textSize="21dp"
         android:textStyle="bold"
@@ -29,7 +29,7 @@
         android:layout_marginTop="10dp"
         android:fontFamily="@font/open_sans"
         android:paddingTop="5dp"
-        android:text="You've Completed Your Daily Reading Segment"
+        android:text="Your Daily Reading Segment Size has been adapted"
         android:textAlignment="center"
         android:textColor="#000000"
         android:textSize="16sp" />
@@ -49,6 +49,5 @@
         app:cornerRadius="18dp"
         app:elevation="0dp"
         tools:ignore="TextContrastCheck" />
-
 
 </LinearLayout>

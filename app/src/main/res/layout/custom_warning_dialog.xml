@@ -37,7 +37,7 @@
         android:orientation="horizontal">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnUpload"
+            android:id="@+id/btnConfirmUpload"
             android:layout_width="120dp"
             android:layout_height="55dp"
             android:backgroundTint="#FF602E"

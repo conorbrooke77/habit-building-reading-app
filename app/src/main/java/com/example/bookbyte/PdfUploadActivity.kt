@@ -6,126 +6,157 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.OpenableColumns
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
 import android.widget.ProgressBar
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.widget.AppCompatButton
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.bookbyte.segmentation.SegmentedTextViewerActivity
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.storage.StorageMetadata
 import com.google.firebase.storage.storage
 
 class PdfUploadActivity : AppCompatActivity() {
 
-//    private lateinit var browseFiles: AppCompatButton
-//    private lateinit var hamburgerButton: ImageView
-    private lateinit var progressBar: ProgressBar
-    private lateinit var uploadBtn: MaterialButton
-
-
-//    private val pickPdfResultLauncher = registerForActivityResult(
-//        ActivityResultContracts.StartActivityForResult()) { result ->
-//
-//        if (result.resultCode == RESULT_OK) {
-//            result.data?.data?.also { uri: Uri ->
-//                uploadPdfToFirebase(uri)
-//            }
-//        }
-//    }
+    private lateinit var btnBrowse: MaterialButton
+    private lateinit var btnUpload: MaterialButton
+    private lateinit var documentName: TextView
+    private var pdfFilename: String? = null
+    private var pdfUri: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pdf_upload)
-
         grantPermissionToReadFromStorage()
 
-//        browseFiles = findViewById(R.id.button_browseFiles)
-//        hamburgerButton = findViewById(R.id.hamburger_btn)
-//        progressBar = findViewById(R.id.progressBar)
-//
-//        progressBar.visibility = View.GONE // Initially, the progress bar is not visible
-//
-//
-//        browseFiles.setOnClickListener {
-//            pickPdfFile()
-//        }
-//
-//        hamburgerButton.setOnClickListener {
-//            openSettingsActivity()
-//        }
-        uploadBtn = findViewById(R.id.upload_btn)
-        uploadBtn.setOnClickListener {
+        btnUpload = findViewById(R.id.btnUpload)
+        btnBrowse = findViewById(R.id.btnBrowse)
+        documentName = findViewById(R.id.documentName)
 
+        btnBrowse.setOnClickListener {
+            pickPdfFile()
+            //add code below to change the background tint color of the button to #FF825A
+            btnBrowse.setBackgroundColor(Color.parseColor("#FF825A"))
+            btnUpload.setBackgroundColor(Color.parseColor("#FF602E"))
+        }
+
+        // Upload PDF dialog box
+        btnUpload.setOnClickListener {
             // When you want to show the custom dialog
             val dialog = Dialog(this)
             dialog.setContentView(R.layout.custom_warning_dialog)
 
-//            val etTotalWords = dialog.findViewById<EditText>(R.id.etTotalWords)
-//            val btnIncreaseWordCount = dialog.findViewById<Button>(R.id.btnIncreaseWordCount)
-//            val btnConfirm = dialog.findViewById<Button>(R.id.btnConfirm)
-//
-//            btnIncreaseWordCount.setOnClickListener {
-//                // Logic to increase word count
-//            }
-//
-//            btnConfirm.setOnClickListener {
-//                // Logic to confirm the action
-//                dialog.dismiss()
-//            }
+            val btnConfirmUpload = dialog.findViewById<MaterialButton>(R.id.btnConfirmUpload)
+            val btnCancel = dialog.findViewById<MaterialButton>(R.id.btnCancel)
+
+
+            btnConfirmUpload.setOnClickListener {
+                uploadPdfToFirebase(pdfUri!!)
+                dialog.dismiss()
+            }
+
+            btnCancel.setOnClickListener {
+                dialog.dismiss()
+            }
 
             dialog.show()
         }
-
     }
 
-    private fun openSettingsActivity() {
-        val intent = Intent(this, SettingsActivity::class.java)
-        startActivity(intent)
+    private fun pickPdfFile() {
+        val chooseFileIntent = Intent(Intent.ACTION_GET_CONTENT).apply {
+            type = "application/pdf"
+        }
+
+        pickPdfResultLauncher.launch(chooseFileIntent)
     }
-//    private fun pickPdfFile() {
-//        val chooseFileIntent = Intent(Intent.ACTION_GET_CONTENT).apply {
-//            type = "application/pdf"
-//        }
-//
-//        pickPdfResultLauncher.launch(chooseFileIntent)
-//    }
+
+    private val pickPdfResultLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()) { result ->
+
+        if (result.resultCode == RESULT_OK) {
+            result.data?.data?.also { uri: Uri ->
+                pdfFilename = getFileName(uri)
+                documentName.text = pdfFilename
+                pdfUri = uri
+            }
+        }
+    }
+
+    private fun getFileName(uri: Uri): String? {
+        var result: String? = null
+        if (uri.scheme.equals("content")) {
+            val cursor = contentResolver.query(uri, null, null, null, null)
+            try {
+                if (cursor != null && cursor.moveToFirst()) {
+                    val columnIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                    if (columnIndex >= 0) {  // Check if the column index is valid
+                        result = cursor.getString(columnIndex)
+                    }
+                }
+            } finally {
+                cursor?.close()
+            }
+        }
+        if (result == null) {
+            result = uri.lastPathSegment  // Fallback to getting the last segment of the path
+        }
+        return result
+    }
 
     private fun uploadPdfToFirebase(uri: Uri) {
+        val user = FirebaseAuth.getInstance().currentUser
         val storageRef = Firebase.storage.reference
 
-        progressBar.visibility = View.VISIBLE // Show the progress bar when upload starts
-
         // A customized path and filename
-        val pdfRef = storageRef.child("pdfs/${System.currentTimeMillis()}.pdf")
-        val uploadTask = pdfRef.putFile(uri)
+        val pdfName = pdfFilename?.removeSuffix(".pdf")
+
+        // Create a new reference to store the file in the format 'pdfs/pdfName/pdf.pdf'
+        val pdfRef = storageRef.child("${user?.uid}/pdfs/$pdfName/${pdfFilename}")
+
+        val metadata = StorageMetadata.Builder()
+        user?.uid?.let {
+            metadata.setCustomMetadata("userId", it)
+        }
+
+        // Start the upload task with metadata
+        val uploadTask = pdfRef.putFile(uri, metadata.build())
+
 
         uploadTask.addOnSuccessListener {
             DEBUG.consoleMessage("Upload Successful : PdfUploadActivity")
-            progressBar.visibility = View.GONE // Hide the progress bar on failure
 
-            val intent = Intent(this, SegmentedTextViewerActivity::class.java)
+            val intent = Intent(this, UserLibraryActivity::class.java).apply {
+                putExtra("FILE_NAME", pdfName)
+                putExtra("SEGMENT_INDEX", 1)
+                putExtra("Source", "PdfUploadActivity");
+            }
             startActivity(intent)
 
         }.addOnFailureListener {
             DEBUG.consoleMessage("Upload Failed : PdfUploadActivity")
-            progressBar.visibility = View.GONE // Hide the progress bar on failure
 
-        }.addOnProgressListener { taskSnapshot ->
+        }.addOnProgressListener {
             // You can use this to show upload progress
-            val progress = (100.0 * taskSnapshot.bytesTransferred / taskSnapshot.totalByteCount).toInt()
-            progressBar.progress = progress
         }
     }
 
-// Grant Permission Functionality
+    fun navigateToLibrary(view: View) {
+        val intent = Intent(this, UserLibraryActivity::class.java)
+        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
+    }
+
+
+    // Grant Permission Functionality
     companion object {
         private const val PERMISSIONS_REQUEST_TO_READ_STORAGE = 1
     }
@@ -166,10 +197,5 @@ class PdfUploadActivity : AppCompatActivity() {
         // Show the AlertDialog
         val dialog = builder.create()
         dialog.show()
-    }
-
-    fun navigateToLibrary(view: View) {
-        val intent = Intent(this, UserLibraryActivity::class.java)
-        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
     }
 }

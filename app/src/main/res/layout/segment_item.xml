@@ -1,0 +1,57 @@
+<!-- segment_item.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="180dp"
+    android:layout_marginLeft="15dp"
+    android:layout_marginTop="30dp"
+    android:layout_marginRight="15dp"
+    android:background="@android:color/white"
+    android:elevation="6dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="16dp">
+
+    <ImageView
+        android:id="@+id/pdf_icon"
+        android:layout_width="90dp"
+        android:layout_height="130dp"
+        android:src="@drawable/pdf_upload" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="8dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingStart="16dp">
+
+        <TextView
+            android:id="@+id/pdf_file_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/open_sans_bold"
+            android:text="Little Woman"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/pdf_author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/open_sans"
+            android:text="By Louisa May Alcott"
+            android:textColor="#7F7F7F"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/delete"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_gravity="top"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:onClick="deletePdf"
+        android:src="@drawable/delete" />
+</LinearLayout>

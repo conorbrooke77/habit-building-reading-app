@@ -118,8 +118,11 @@ class LoginActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
                     Toast.makeText(baseContext, "Login Successful.", Toast.LENGTH_SHORT).show()
+                    if (FirebaseAuth.getInstance().currentUser != null) {
+                        App.updateStreakIfNeeded(this)
+                    }
                     // Proceed to your main activity or dashboard
-                    val intent = Intent(this, PdfUploadActivity::class.java)
+                    val intent = Intent(this, UserLibraryActivity::class.java)
                     startActivity(intent)
                     finish()
                 } else {

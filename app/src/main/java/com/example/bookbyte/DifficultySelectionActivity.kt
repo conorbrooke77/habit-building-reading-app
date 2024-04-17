@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import kotlin.math.roundToInt
 
 class DifficultySelectionActivity : AppCompatActivity() {
     private lateinit var buttonContinue: AppCompatButton
@@ -61,35 +62,17 @@ class DifficultySelectionActivity : AppCompatActivity() {
             btnConfirm.setOnClickListener {
                 val wordCount = totalWordsContainer.text.toString().toIntOrNull()
 
-                if (wordCount == null || wordCount > 10000) {
+                if (wordCount == null || wordCount > 10000 || wordCount < 200) {
                     // Show a toast message if the value is not a number or is greater than 10000
                     Toast.makeText(
                         this,
-                        "Please enter a number less than 10001.",
+                        "Please enter a number in the range 200-10000.",
                         Toast.LENGTH_LONG
                     ).show()
 
                     // Request focus back on the totalWordsContainer EditText
                     totalWordsContainer.requestFocus()
                 } else {
-                    wordAmount = totalWordsContainer.text.toString().toIntOrNull() ?: 0
-                    val databaseReference = FirebaseDatabase.getInstance("https://habit-building-reading-a-bfcfb-default-rtdb.europe-west1.firebasedatabase.app/").reference
-
-                    val userId = auth.currentUser?.uid
-                    if (userId != null) {
-
-                        databaseReference.child("Users").child(userId).child("wordAmount")
-                            .setValue(wordAmount)
-                            .addOnSuccessListener {
-                                Log.d("Database", "Word amount saved successfully")
-                                // Handle success, perhaps inform the user
-                            }
-                            .addOnFailureListener {
-                                Log.d("Database", "Failed to save word amount")
-                                // Handle failure, perhaps inform the user
-                            }
-                    }
-
                     dialog.dismiss()
                 }
             }
@@ -117,13 +100,29 @@ class DifficultySelectionActivity : AppCompatActivity() {
         })
 
         buttonContinue.setOnClickListener {
-            Toast.makeText(
-                this,
-                wordAmount.toString(),
-                Toast.LENGTH_SHORT,
-            ).show()
+            val databaseReference = FirebaseDatabase.getInstance("https://habit-building-reading-a-bfcfb-default-rtdb.europe-west1.firebasedatabase.app").reference
+
+            val userId = auth.currentUser?.uid
+            if (userId != null) {
+
+                databaseReference.child("Users").child(userId).child("pageCount")
+                    .setValue(wordsToPages(wordAmount))
+                    .addOnSuccessListener {
+                        Log.d("Database", "Word amount saved successfully")
+                        // Handle success, perhaps inform the user
+                    }
+                    .addOnFailureListener {
+                        Log.d("Database", "Failed to save word amount")
+                        // Handle failure, perhaps inform the user
+                    }
+            }
             val intent = Intent(this, PdfUploadActivity::class.java)
             startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
         }
+    }
+
+    private fun wordsToPages(wordAmount: Int): Int {
+        val wordsPerPage = 220
+        return (wordAmount.toDouble() / wordsPerPage).roundToInt()
     }
 }

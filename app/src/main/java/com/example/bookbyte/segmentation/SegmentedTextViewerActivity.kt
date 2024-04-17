@@ -1,152 +1,174 @@
 package com.example.bookbyte.segmentation
 
 import android.app.Dialog
+import android.content.Context
 import android.content.Intent
+import com.github.barteksc.pdfviewer.util.FitPolicy
+import android.view.ViewGroup
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import com.example.bookbyte.App
-import com.example.bookbyte.Dashboard
+import com.example.bookbyte.Book
 import com.example.bookbyte.R
 import com.example.bookbyte.SettingsActivity
-import com.google.firebase.database.ValueEventListener
+import com.example.bookbyte.StatisticsUpdater
+import com.example.bookbyte.UserLibraryActivity
+import com.github.barteksc.pdfviewer.PDFView
+import com.google.android.material.button.MaterialButton
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
+import java.io.File
+
 
 class SegmentedTextViewerActivity(): AppCompatActivity() {
 
-    private lateinit var completeSegmentBtn: AppCompatButton
+    private lateinit var pdfView: PDFView
+    private lateinit var completeSegmentBtn: MaterialButton
     private lateinit var readingStreak: TextView
     private lateinit var hamburgerButton: ImageView
-    private var segmentedData: String? = null
-    private var secondSegment: String? = null
-    private var valueEventListener: ValueEventListener? = null
+    private lateinit var segmentBtnLayout: LinearLayout
+    private lateinit var fileName: String
+    private var statisticsUpdater = StatisticsUpdater()
+    private var segmentIndex: Int = 0
+    private val user = FirebaseAuth.getInstance().currentUser
+    private var startTime: Long = 0
+    private var endTime: Long = 0
+    private var readOnTheSameDay = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_segmented_text_viewer)
 
+        fileName = intent.getStringExtra("FILE_NAME").toString()
+        segmentIndex = intent.getIntExtra("SEGMENT_INDEX", 1)
+
         readingStreak = findViewById(R.id.readingStreak)
-        //Fix zero in-front
         readingStreak.text = App.displayReadingStreak(this)
         hamburgerButton = findViewById(R.id.hamburgerBtn)
+        completeSegmentBtn = findViewById(R.id.completeSegmentBtn)
+        pdfView = findViewById(R.id.pdfView)
+        segmentBtnLayout = findViewById(R.id.segmentBtnLayout)
+
+        startTime = System.currentTimeMillis()
+
+        pdfView.setOnClickListener {
+
+            // Show the button only if the last page is visible
+            if (pdfView.currentPage == pdfView.pageCount - 1) {
+                completeSegmentBtn.visibility = View.VISIBLE
+                segmentBtnLayout.visibility = View.VISIBLE
+            } else {
+                completeSegmentBtn.visibility = View.GONE
+                segmentBtnLayout.visibility = View.GONE
+            }
+        }
 
         hamburgerButton.setOnClickListener {
             val intent = Intent(this, SettingsActivity::class.java)
             startActivity(intent)
         }
 
-        val isLibrary = intent.getBooleanExtra("isLibrary", false)
-        val title = intent.getStringExtra("title")
-
-        if (isLibrary) {
-            val storageRef = FirebaseStorage.getInstance().reference.child("books/A_Room_with_a_View_Forster__E__M___Edward_Morgan_.txt")
-
-            CoroutineScope(Dispatchers.IO).launch {
-                try {
-                    val bytes = storageRef.getBytes(Long.MAX_VALUE).await()
-                    val text = String(bytes)
-
-                    // Split the text into words. This simple split may need to be refined based on the text content
-                    val words = text.split("\\s+".toRegex()).filter { it.isNotEmpty() }
-
-                    if (words.size >= 2300) {
-                        // Take the first 1000 words and join them into a string
-                        val firstSegment = words.drop(303).take(1000).joinToString(" ")
-                        secondSegment = words.drop(1000).take(1000).joinToString(" ")
-
-                        // Use the first segment as needed and save the second for later use
-                        CoroutineScope(Dispatchers.Main).launch {
-                            updateUI(firstSegment)
-                            // Save 'secondSegment' for later use
-                        }
-                    } else {
-                        // Handle case where the book has fewer than 2000 words
-                        CoroutineScope(Dispatchers.Main).launch {
-                            updateUI(words.joinToString(" "))
-                            // Note: No second segment in this case
-                        }
-                    }
-                } catch (e: Exception) {
-                    // Handle errors such as file not found or network issues
-                    e.printStackTrace()
-                }
-            }
-        } else if (intent.getStringExtra("secondSegment") != null) {
-            updateUI(intent.getStringExtra("secondSegment"))
-        } else {
-            // Reference to your Firebase Cloud Storage bucket
-            val storageRef = FirebaseStorage.getInstance().reference.child("parsed")
-
-            // List all files in the directory
-            storageRef.listAll()
-                .addOnSuccessListener { listResult ->
-                    val files = listResult.items
-
-                    val sortedFiles = files.sortedByDescending { it.name }
-                    if (sortedFiles.isNotEmpty()) {
-                        // Get the most recent file
-                        val recentFile = sortedFiles.first()
-
-                        // Download the file as a string
-                        recentFile.getBytes(Long.MAX_VALUE).addOnSuccessListener { bytes ->
-                            val content = String(bytes)
-                            updateUI(content)
-
-                        }.addOnFailureListener {
-                            // Handle any errors
-                            Log.e("SegmentedTextViewer", "Failed to download file", it)
-                        }
-                    } else {
-                        Log.e("SegmentedTextViewer", "No files to load")
-                    }
-                }.addOnFailureListener { exception ->
-                    Log.e("SegmentedTextViewer", "Failed to list files", exception)
-                }
-        }
-        completeSegmentBtn = findViewById(R.id.completeSegmentBtn)
-
-        // Set up the click listener
         completeSegmentBtn.setOnClickListener {
-            showDialog()
+            val dialog = Dialog(this)
+            dialog.setContentView(R.layout.dialog_complete_reading)
+
+            val continueBtn = dialog.findViewById<MaterialButton>(R.id.continueBtn)
+
+            continueBtn.setOnClickListener {
+                updateStreak()
+                segmentIndex += 1
+
+                endTime = System.currentTimeMillis()
+                val timeTaken = endTime - startTime // Duration in milliseconds
+
+                statisticsUpdater.updateTotalSegmentsValue()
+
+                val intent = Intent(this, UserLibraryActivity::class.java).apply {
+                    putExtra("SEGMENT_INDEX", segmentIndex)
+                    putExtra("FILE_NAME", fileName)
+                    putExtra("Source", "SegmentedTextViewerActivity")
+                    putExtra("TIME_TAKEN", timeTaken) // Passing the time taken to the next activity
+                    putExtra("READ_SAME_DAY", readOnTheSameDay)
+                }
+
+                dialog.dismiss()  // Ensure dialog is dismissed before transitioning
+                startActivity(intent)
+                finish()  // Finish the current activity
+            }
+
+            dialog.show()
         }
 
+
+        loadPdfFromFirebase("${user?.uid}/segments/${fileName}/segment ${segmentIndex}.pdf")
     }
 
+    private fun loadPdfFromFirebase(path: String) {
+        val storageRef = FirebaseStorage.getInstance().getReference(path)
+        val localFile = File.createTempFile("tempPdf", "pdf")
 
-    private fun updateUI(segmentedData: String?) {
-        findViewById<TextView>(R.id.segmentedTextView).text = segmentedData
-    }
-
-    private fun showDialog() {
-        val dialog = Dialog(this)
-        dialog.setContentView(R.layout.dialog_complete_reading)
-
-        val continueBtn: AppCompatButton = dialog.findViewById(R.id.continueBtn)
-        continueBtn.setOnClickListener {
-            updateStreak()
+        storageRef.getFile(localFile).addOnSuccessListener {
+            renderPdf(localFile)
+        }.addOnFailureListener {
+            Log.e("PDFView", "Error downloading PDF", it)
         }
+    }
 
-        dialog.show()
+    private fun renderPdf(file: File) {
+        try {
+            pdfView.fromFile(file)
+                .enableSwipe(true) // allows to block changing pages using swipe
+                .swipeHorizontal(false)
+                .enableDoubletap(true) // double tap to zoom
+                .defaultPage(0)
+                .enableAnnotationRendering(false)
+                .password(null)
+                .scrollHandle(null)
+                .pageFitPolicy(FitPolicy.WIDTH) // fit each page in the PDFView to the width
+                .pageSnap(true) // snap pages to screen boundaries
+                .autoSpacing(true) // add dynamic spacing to fit each page on its own on the screen
+                .fitEachPage(true) // fit each page to the viewer, might be deprecated depending on version
+                .enableAntialiasing(true) // improve rendering a little bit on low-res screens
+                .spacing(0) // spacing between pages in
+                .onPageChange { page, pageCount ->
+                    if (page == pageCount - 1) {
+                        completeSegmentBtn.visibility = View.VISIBLE
+                        segmentBtnLayout.visibility = View.VISIBLE
+                    } else {
+                        completeSegmentBtn.visibility = View.GONE
+                        segmentBtnLayout.visibility = View.GONE
+                    }
+                }
+                .load()
+        } catch (e: Exception) {
+            Log.e("PDFRender", "Error rendering PDF", e)
+        }
     }
 
     private fun updateStreak() {
-        var dailyStreak = App.getReadingStreak(this)
-        App.saveReadingStreak(++dailyStreak, this)
+        val lastReadingStreakUpdate = App.getLastUpdate(this)
+        val currentTime = System.currentTimeMillis()
+        val eightHoursInMillis = 8 * 60 * 60 * 1000 // 8 hours in milliseconds - 8 * 60 * 60 * 1000
 
-        val intent = Intent(this, Dashboard::class.java).apply {
-            putExtra("secondSegment", secondSegment)
-            putExtra("title", title)
 
-            // Pass other data as needed
+        // Check if the current time is at least 8 hours greater than the last update time
+        if (currentTime - lastReadingStreakUpdate >= eightHoursInMillis) {
+            var dailyStreak = App.getReadingStreak(this)
+            dailyStreak++
+
+            statisticsUpdater.updateLongestStreak(dailyStreak)
+            App.saveReadingStreak(dailyStreak, this)
+
+        } else {
+            Log.d("updateStreak", "Streak update skipped: Less than 8 hours since last update.")
+            readOnTheSameDay = true
         }
-        startActivity(intent)
-        finish() // Call finish() after starting the new activity
     }
 }

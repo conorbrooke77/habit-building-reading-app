@@ -16,9 +16,22 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_settings)
     }
 
-    fun navigateToLibrary(view: View) {
+    fun navigateBack(view: View) {
+        finish()
+    }
+
+    fun navigateToPDFUpload(view: View) {
+
+        val intent = Intent(this, PdfUploadActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    fun navigateToUserLibrary(view: View) {
+
         val intent = Intent(this, UserLibraryActivity::class.java)
-        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
+        startActivity(intent)
+        finish()
     }
 
     fun logout(view: View) {
