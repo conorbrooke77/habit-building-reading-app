@@ -106,7 +106,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:fontFamily="@font/cairo_semibold"
-                android:text="Uplaod Document"
+                android:text="Upload Document"
                 android:textColor="#3C3C3C"
                 android:textSize="22sp" />
         </LinearLayout>
@@ -138,6 +138,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_horizontal|center_vertical"
+            android:onClick="navigateToGutenbergLibrary"
             android:orientation="horizontal">
 
             <ImageView
@@ -151,7 +152,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:fontFamily="@font/cairo_semibold"
-                android:text="Gutenburg Library"
+                android:text="Gutenberg Library"
                 android:textColor="#3C3C3C"
                 android:textSize="22sp" />
         </LinearLayout>

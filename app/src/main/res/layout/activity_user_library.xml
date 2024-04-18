@@ -73,21 +73,20 @@
             android:textSize="15sp" />
 
     </LinearLayout>
+<!--    <ProgressBar-->
+<!--        android:id="@+id/progressBar"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_centerInParent="true"-->
+<!--        android:layout_gravity="center_horizontal|center_vertical"-->
+<!--        android:layout_marginTop="80dp"-->
+<!--        android:visibility="visible" />-->
 
-    <LinearLayout
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/pdfContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_gravity="center_horizontal|center_vertical"
-            android:layout_marginTop="80dp"
-            android:visibility="visible" />
-
-    </LinearLayout>
+        />
 </LinearLayout>

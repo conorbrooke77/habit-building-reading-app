@@ -1,21 +1,16 @@
 package com.example.bookbyte.segmentation
 
 import android.app.Dialog
-import android.content.Context
 import android.content.Intent
 import com.github.barteksc.pdfviewer.util.FitPolicy
-import android.view.ViewGroup
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.AppCompatButton
 import com.example.bookbyte.App
-import com.example.bookbyte.Book
 import com.example.bookbyte.R
 import com.example.bookbyte.SettingsActivity
 import com.example.bookbyte.StatisticsUpdater
@@ -52,7 +47,7 @@ class SegmentedTextViewerActivity(): AppCompatActivity() {
         readingStreak = findViewById(R.id.readingStreak)
         readingStreak.text = App.displayReadingStreak(this)
         hamburgerButton = findViewById(R.id.hamburgerBtn)
-        completeSegmentBtn = findViewById(R.id.completeSegmentBtn)
+        completeSegmentBtn = findViewById(R.id.loadBookButton)
         pdfView = findViewById(R.id.pdfView)
         segmentBtnLayout = findViewById(R.id.segmentBtnLayout)
 

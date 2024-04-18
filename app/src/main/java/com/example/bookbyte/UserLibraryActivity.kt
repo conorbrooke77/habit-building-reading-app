@@ -8,12 +8,15 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.bookbyte.segmentation.FirebaseSegmentationInterface
+import com.example.bookbyte.segmentation.PdfSegmentAdapter
 import com.example.bookbyte.segmentation.SegmentAdapter
 import com.example.bookbyte.segmentation.SegmentedTextViewerActivity
 import com.google.android.material.button.MaterialButton
@@ -21,9 +24,11 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.launch
 
-class UserLibraryActivity : AppCompatActivity() {
+class UserLibraryActivity : AppCompatActivity(), PdfSegmentInteraction {
     private lateinit var fileName: String
     private lateinit var progressBar: ProgressBar
+    private lateinit var recyclerView: androidx.recyclerview.widget.RecyclerView
+    private var pdfSegmentAdapter = PdfSegmentAdapter(this, this)
     private var segmentAdapter = SegmentAdapter(this)
     private var statisticsUpdater = StatisticsUpdater()
     private var segmentCompletionTime: Long = 0
@@ -35,9 +40,13 @@ class UserLibraryActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_library)
+        recyclerView = findViewById(R.id.pdfContainer)
 
-        progressBar = findViewById(R.id.progressBar)
-        showProgressBar()
+        recyclerView.adapter = pdfSegmentAdapter
+        recyclerView.layoutManager = LinearLayoutManager(this)
+
+        //progressBar = findViewById(R.id.progressBar)
+        //showProgressBar()
 
         var averageCompletionTime = -1L
 
@@ -152,59 +161,30 @@ class UserLibraryActivity : AppCompatActivity() {
                         displayPdfSegment(item.name, uri.toString())
                     }
                 }
-                hideProgressBar()
+                //hideProgressBar()
             }
             .addOnFailureListener {
                 Toast.makeText(this, "Failed to retrieve segment info", Toast.LENGTH_SHORT).show()
             }
     }
     private fun displayPdfSegment(fileName: String, fileUri: String) {
-        val ref = FirebaseStorage.getInstance().getReferenceFromUrl(fileUri)
-        ref.getBytes(Long.MAX_VALUE).addOnSuccessListener { bytes ->
-            // Convert bytes to string, assuming text file contains "filename segmentIndex"
-            val content = String(bytes)
-            val parts = content.split(" ")
-            if (parts.size >= 2) {
-                val fileName = parts[0]
-                val segmentIndexFromFile = parts[1].toIntOrNull() ?: 0
+        pdfSegmentAdapter.addItem(fileName, fileUri)
+    }
 
-                val (author, pdfName) = processFileName(fileName)
-                // Assuming you have a LinearLayout to add views to
-                val layout = findViewById<LinearLayout>(R.id.pdfContainer)
-                val itemView = LayoutInflater.from(this).inflate(R.layout.segment_item, layout, false)
+    override fun deletePdf(fileName: String) {
 
-                // Update the views in the item layout
-                itemView.findViewById<TextView>(R.id.pdf_file_name).text = pdfName
-                itemView.findViewById<TextView>(R.id.pdf_author).text = "By $author"
+        Log.d("UserLibraryActivity", "The file name is $fileName")
+        val fileRef = storageReference.child("${user?.uid}/segments_info/$fileName.txt")
 
-                // Set the click listener for the item layout
-                itemView.setOnClickListener {
-                    navigateToSegmentedTextViewer(fileName, segmentIndexFromFile)
-                }
-
-                // Add the completed item layout to the container
-                layout.addView(itemView)
-            }
+        fileRef.delete().addOnSuccessListener {
+            Toast.makeText(this, "File deleted successfully", Toast.LENGTH_SHORT).show()
+            recreate()  // Restart the activity to reflect changes
         }.addOnFailureListener {
-            // Handle error in reading the file
-            Toast.makeText(this, "Failed to load segment info", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Failed to delete file", Toast.LENGTH_SHORT).show()
         }
     }
 
-    private fun processFileName(fileName: String): Pair<String, String> {
-        val parts = fileName.split("-")
-
-        // Assuming the author's name is always the first two parts split by '-'
-        val author = if (parts.size >= 2) "${parts[0]} ${parts[1]}" else fileName
-
-        // Combine the rest of the parts to form the full title and then take the first 50 characters
-        val fullTitle = parts.drop(2).joinToString("-").dropLast(4)  // Drop the last 4 characters to remove '.pdf'
-        var pdfName = if (fullTitle.length > 50) fullTitle.substring(0, 40) else fullTitle
-        pdfName = "$pdfName..."
-        return Pair(author, pdfName)
-    }
-
-    private fun navigateToSegmentedTextViewer(fileName: String, segmentIndexFromFile: Int) {
+    override fun navigateToSegmentedTextViewer(fileName: String, segmentIndexFromFile: Int) {
         val intent = Intent(this, SegmentedTextViewerActivity::class.java).apply {
             putExtra("FILE_NAME", fileName)
             putExtra("SEGMENT_INDEX", segmentIndexFromFile)

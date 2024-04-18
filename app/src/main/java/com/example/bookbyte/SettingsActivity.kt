@@ -27,6 +27,13 @@ class SettingsActivity : AppCompatActivity() {
         finish()
     }
 
+    fun navigateToGutenbergLibrary(view: View) {
+
+        val intent = Intent(this, GutenbergLibraryActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
     fun navigateToUserLibrary(view: View) {
 
         val intent = Intent(this, UserLibraryActivity::class.java)

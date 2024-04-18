@@ -1,14 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="0dp"
+    android:orientation="vertical"
+    android:paddingTop="20dp"
+    android:paddingBottom="20dp">
 
     <ImageView
         android:id="@+id/bookCoverImageView"
         android:layout_width="145dp"
         android:layout_height="220dp"
         android:layout_gravity="center"
-        android:scaleType="centerCrop"
-        android:background="@drawable/book_cover_background"/>
+        android:background="@drawable/book_cover_background"
+        android:scaleType="centerCrop" />
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/bookTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:fontFamily="@font/kumbh_sans_bold"
+        android:gravity="center_horizontal"
+        android:text="TextView"
+        android:textSize="17sp" />
+
+</LinearLayout>

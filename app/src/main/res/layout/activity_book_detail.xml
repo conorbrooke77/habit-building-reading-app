@@ -2,12 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="16dp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="450dp"
+        android:layout_height="420dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
         android:orientation="vertical">
 
         <ImageView
@@ -26,7 +29,9 @@
             android:id="@+id/bookTitleTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
             android:layout_marginTop="8dp"
+            android:text="A Room With a View"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -34,15 +39,24 @@
             android:id="@+id/bookAuthorsTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="5dp"
+            android:text="Forster, E. M (Edward Morgan)"
             android:textSize="16sp" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/loadBookButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Begin Segmentation" />
+            android:layout_width="200dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="50dp"
+            android:backgroundTint="#FF602E"
+            android:fontFamily="@font/open_sans_bold"
+            android:foregroundGravity="center_horizontal"
+            android:text="Add To Library"
+            android:textColor="#FFFFFF"
+            android:textSize="17sp"
+            app:cornerRadius="28dp" />
     </LinearLayout>
 
     <!-- Include other metadata views as needed -->

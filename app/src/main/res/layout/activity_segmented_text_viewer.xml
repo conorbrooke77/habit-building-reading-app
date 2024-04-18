@@ -85,7 +85,7 @@
             android:visibility="visible">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/completeSegmentBtn"
+                android:id="@+id/loadBookButton"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_marginStart="90dp"

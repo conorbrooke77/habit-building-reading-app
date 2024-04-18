@@ -48,7 +48,7 @@
             android:name=".BookDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".LibraryActivity"
+            android:name=".GutenbergLibraryActivity"
             android:exported="false"
             android:label="@string/title_activity_library"
             android:theme="@style/Theme.BookByte" />
