@@ -1,10 +1,13 @@
 package com.example.bookbyte
 
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
@@ -24,7 +27,9 @@ import java.io.File
 class BookDetailActivity : AppCompatActivity() {
     private lateinit var btn: AppCompatButton
     private var pdfFilename: String? = null
-    private var pdfUri: Uri? = null
+    private lateinit var progressBar: ProgressBar
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_book_detail)
@@ -33,6 +38,8 @@ class BookDetailActivity : AppCompatActivity() {
         val authors = intent.getStringExtra("authors")
         val coverUrl = intent.getStringExtra("coverUrl")
         pdfFilename = intent.getStringExtra("filename")
+        progressBar = findViewById(R.id.progressBar)
+
 
         findViewById<TextView>(R.id.bookTitleTextView).text = title
         findViewById<TextView>(R.id.bookAuthorsTextView).text = authors
@@ -42,6 +49,8 @@ class BookDetailActivity : AppCompatActivity() {
         btn = findViewById(R.id.loadBookButton)
         // Set up the click listener
         btn.setOnClickListener {
+            btn.setBackgroundColor(Color.parseColor("#FF825A"))
+            progressBar.visibility = View.VISIBLE
             pdfFilename?.let {
                 downloadAndUploadPdf(it)
             }
@@ -94,6 +103,7 @@ class BookDetailActivity : AppCompatActivity() {
 
         uploadTask.addOnSuccessListener {
             DEBUG.consoleMessage("Upload Successful : PdfUploadActivity")
+            progressBar.visibility = View.GONE
 
             val intent = Intent(this, UserLibraryActivity::class.java).apply {
                 putExtra("FILE_NAME", pdfName)

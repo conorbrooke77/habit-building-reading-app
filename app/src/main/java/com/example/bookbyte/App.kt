@@ -60,31 +60,31 @@ class App: Application() {
 
             val calendar = Calendar.getInstance().apply {
                 timeInMillis = System.currentTimeMillis()
-                set(Calendar.HOUR_OF_DAY, 13)  // 1:00 PM
+                set(Calendar.HOUR_OF_DAY, 20)  // 1:00 PM
             }
 
-            alarmManager.setInexactRepeating(
-                AlarmManager.RTC_WAKEUP,
-                calendar.timeInMillis,
-                AlarmManager.INTERVAL_DAY,
-                pendingIntent
-            )
+//            alarmManager.setInexactRepeating(
+//                AlarmManager.RTC_WAKEUP,
+//                calendar.timeInMillis,
+//                AlarmManager.INTERVAL_DAY,
+//                pendingIntent
+//            )
 //            // Log the exact time the alarm is set for
 //            Log.d("scheduleDailyReminder", "Scheduling alarm at: ${calendar.time}")
 //
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                alarmManager.setExactAndAllowWhileIdle(
-//                    AlarmManager.RTC_WAKEUP,
-//                    calendar.timeInMillis,
-//                    pendingIntent
-//                )
-//            } else {
-//                alarmManager.setExact(
-//                    AlarmManager.RTC_WAKEUP,
-//                    calendar.timeInMillis,
-//                    pendingIntent
-//                )
-//            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                alarmManager.setExactAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    calendar.timeInMillis,
+                    pendingIntent
+                )
+            } else {
+                alarmManager.setExact(
+                    AlarmManager.RTC_WAKEUP,
+                    calendar.timeInMillis,
+                    pendingIntent
+                )
+            }
 //            Log.d("scheduleDailyReminder", "Alarm is set to repeat every day")
         }
 

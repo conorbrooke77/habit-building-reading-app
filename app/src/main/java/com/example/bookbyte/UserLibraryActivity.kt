@@ -5,6 +5,8 @@ import android.app.Dialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -45,13 +47,14 @@ class UserLibraryActivity : AppCompatActivity(), PdfSegmentInteraction {
         recyclerView.adapter = pdfSegmentAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        //progressBar = findViewById(R.id.progressBar)
-        //showProgressBar()
+        progressBar = findViewById(R.id.progressBar)
+        showProgressBar()
 
         var averageCompletionTime = -1L
 
         val source = intent.getStringExtra("Source");
         if ("PdfUploadActivity" == source) {
+
             fileName = intent.getStringExtra("FILE_NAME").toString()
             segmentIndex = intent.getIntExtra("SEGMENT_INDEX", 1)
             createSegmentInfoFile()
@@ -84,6 +87,7 @@ class UserLibraryActivity : AppCompatActivity(), PdfSegmentInteraction {
     }
 
     private fun checkSegmentIndexValidity() {
+
         val dirRef = FirebaseStorage.getInstance().reference.child("${user?.uid}/segments/$fileName")
 
         dirRef.listAll()
@@ -119,15 +123,22 @@ class UserLibraryActivity : AppCompatActivity(), PdfSegmentInteraction {
     }
 
     private fun updateSegmentInfoFile() {
+
         val fileRef = storageReference.child("${user?.uid}/segments_info/$fileName.txt")
         fileRef.getBytes(Long.MAX_VALUE).addOnSuccessListener { bytes ->
             val content = String(bytes)
-            val parts = content.split(" ")
-            if (parts.size >= 2) {
-                val updatedContent = "${parts[0]} $segmentIndex"
+
+            // Split the content string at the last space to isolate the segment index
+            val lastIndex = content.lastIndexOf(" ")
+            if (lastIndex != -1) {
+                val text = content.substring(0, lastIndex)
+                val updatedContent = "$text $segmentIndex"
+
                 fileRef.putBytes(updatedContent.toByteArray()).addOnSuccessListener {
-                    loadSegmentsFromStorage()  // Call to load after successful update
-                }.addOnFailureListener {
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        loadSegmentsFromStorage()  // Call to load the newly added segment info
+                    }, 3000) // Delay of 1 second
+                    }.addOnFailureListener {
                     Toast.makeText(this, "Failed to update segment info.", Toast.LENGTH_SHORT).show()
                 }
             }
@@ -143,8 +154,9 @@ class UserLibraryActivity : AppCompatActivity(), PdfSegmentInteraction {
         fileRef.putBytes(fileInfo.toByteArray())
             .addOnSuccessListener {
                 // Successfully written file
-                Toast.makeText(this, "Segment info file created.", Toast.LENGTH_SHORT).show()
-                loadSegmentsFromStorage()  // Call to load the newly added segment info
+                Handler(Looper.getMainLooper()).postDelayed({
+                    loadSegmentsFromStorage()  // Call to load the newly added segment info
+                }, 3000) // Delay of 1 second
             }
             .addOnFailureListener {
                 Toast.makeText(this, "Failed to create segment info file.", Toast.LENGTH_SHORT).show()
@@ -161,7 +173,7 @@ class UserLibraryActivity : AppCompatActivity(), PdfSegmentInteraction {
                         displayPdfSegment(item.name, uri.toString())
                     }
                 }
-                //hideProgressBar()
+                hideProgressBar()
             }
             .addOnFailureListener {
                 Toast.makeText(this, "Failed to retrieve segment info", Toast.LENGTH_SHORT).show()
@@ -172,13 +184,13 @@ class UserLibraryActivity : AppCompatActivity(), PdfSegmentInteraction {
     }
 
     override fun deletePdf(fileName: String) {
-
-        Log.d("UserLibraryActivity", "The file name is $fileName")
         val fileRef = storageReference.child("${user?.uid}/segments_info/$fileName.txt")
 
         fileRef.delete().addOnSuccessListener {
+            Handler(Looper.getMainLooper()).postDelayed({
+                recreate()
+            }, 2000) // Delay of 1 second
             Toast.makeText(this, "File deleted successfully", Toast.LENGTH_SHORT).show()
-            recreate()  // Restart the activity to reflect changes
         }.addOnFailureListener {
             Toast.makeText(this, "Failed to delete file", Toast.LENGTH_SHORT).show()
         }

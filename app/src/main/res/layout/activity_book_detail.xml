@@ -57,8 +57,15 @@
             android:textColor="#FFFFFF"
             android:textSize="17sp"
             app:cornerRadius="28dp" />
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:visibility="gone" />
+
     </LinearLayout>
 
-    <!-- Include other metadata views as needed -->
 
 </LinearLayout>

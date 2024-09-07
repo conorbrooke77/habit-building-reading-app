@@ -34,6 +34,34 @@ class SettingsActivity : AppCompatActivity() {
         finish()
     }
 
+    fun navigateToProfile(view: View) {
+
+        val intent = Intent(this, ProfileActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    fun navigateToStatistics(view: View) {
+
+        val intent = Intent(this, StatisticsActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    fun navigateToGeneralSettings(view: View) {
+
+        val intent = Intent(this, GeneralSettingsActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    fun navigateToAdjustSegments(view: View) {
+
+        val intent = Intent(this, AdjustSegments::class.java)
+        startActivity(intent)
+        finish()
+    }
+
     fun navigateToUserLibrary(view: View) {
 
         val intent = Intent(this, UserLibraryActivity::class.java)

@@ -63,7 +63,7 @@ class SegmentAdapter(private val lifecycleOwner: LifecycleOwner) {  // Pass life
         // Base word
         Log.d("SegmentAdapter", "Current Word Amount: $currentWordAmount")
 
-        var newWordAmount = currentWordAmount+40
+        var newWordAmount = currentWordAmount+20
         Log.d("SegmentAdapter", "Average completion time: $averageCompletionTime")
         Log.d("SegmentAdapter", "Last completion time: $timeToCompleteSegment")
         Log.d("SegmentAdapter", "Missed Days: $daysMissed")
@@ -71,7 +71,7 @@ class SegmentAdapter(private val lifecycleOwner: LifecycleOwner) {  // Pass life
         Log.d("SegmentAdapter", "Same day : $sameDay")
 
         if (sameDay) {
-            newWordAmount += 60// Add 100 words for reading on the same day
+            newWordAmount += 30// Add 100 words for reading on the same day
         }
         //Divide the newWordAmount by 220 to get the number of pages but round up to the nearest whole number
         // val averageCompletionTime = (ceil(newWordAmount.toDouble() / 220).toLong() * 2) * 60 * 1000 // 2 minutes per page as an example average time
@@ -110,9 +110,9 @@ class SegmentAdapter(private val lifecycleOwner: LifecycleOwner) {  // Pass life
         if (currentStreak > 10) {
             newWordAmount += 100 // Add 40 words as a reward for maintaining a streak longer than 5 days
         } else if (currentStreak > 5) {
-            newWordAmount += 80 // Add 40 words as a reward for maintaining a streak longer than 5 days
+            newWordAmount += 50 // Add 40 words as a reward for maintaining a streak longer than 5 days
         } else if (currentStreak > 2) {
-            newWordAmount += 60 // Add 20 words for breaking a streak shorter than 5 days
+            newWordAmount += 30 // Add 20 words for breaking a streak shorter than 5 days
         }
 
         // Adjust for missed days but prevent drastic reductions
@@ -135,7 +135,7 @@ class SegmentAdapter(private val lifecycleOwner: LifecycleOwner) {  // Pass life
         return newWordAmount
     }
 
-    private fun updateWordAmountInFirebase(wordAmount: Long) {
+    fun updateWordAmountInFirebase(wordAmount: Long) {
 
         val pageCount = (wordAmount.toDouble() / 220).roundToInt()
         val userId = auth.currentUser?.uid ?: return

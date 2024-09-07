@@ -47,6 +47,7 @@
             android:layout_width="380dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:onClick="navigateToProfile"
             android:gravity="center_horizontal|center_vertical"
             android:orientation="horizontal">
 
@@ -69,6 +70,7 @@
             android:layout_width="380dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:onClick="navigateToAdjustSegments"
             android:gravity="center_horizontal|center_vertical"
             android:orientation="horizontal">
 
@@ -160,6 +162,7 @@
             android:layout_width="380dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:onClick="navigateToStatistics"
             android:gravity="center_horizontal|center_vertical"
             android:orientation="horizontal">
 
@@ -182,6 +185,7 @@
             android:layout_width="380dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:onClick="navigateToGeneralSettings"
             android:gravity="center_horizontal|center_vertical"
             android:orientation="horizontal">
 

@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.GridView
 import android.widget.TextView
 import com.google.firebase.storage.FirebaseStorage
@@ -100,6 +101,12 @@ class GutenbergLibraryActivity : AppCompatActivity() {
 
         // Return a default value if the format is not as expected
         return Pair("Unknown", "Unknown Title")
+    }
+    fun navigateToSettings(view: View) {
+
+        val intent = Intent(this, SettingsActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
 }

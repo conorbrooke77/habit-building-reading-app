@@ -1,6 +1,7 @@
 package com.example.bookbyte.segmentation
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,10 +35,13 @@ class PdfSegmentAdapter(private val context: Context, private val interaction: P
         holder.pdfAuthor.text = "By ${item.author}"
 
         holder.deleteButton.setOnClickListener {
+            Log.d("ProblemWithFile", "File name is ${item.fileName} when deleting")
+
             interaction.deletePdf(item.fileName)
         }
 
         holder.textListener.setOnClickListener {
+            Log.d("ProblemWithFile", "File name is ${item.fileName} when sending to segmented text viewer")
             interaction.navigateToSegmentedTextViewer(item.fileName, item.segmentIndex)
         }
     }
@@ -48,11 +52,20 @@ class PdfSegmentAdapter(private val context: Context, private val interaction: P
         val ref = FirebaseStorage.getInstance().getReferenceFromUrl(fileUri)
         ref.getBytes(Long.MAX_VALUE).addOnSuccessListener { bytes ->
             val content = String(bytes)
-            val parts = content.split(" ")
-            if (parts.size >= 2) {
-                val (author, pdfName) = processFileName(parts[0])
-                val segmentIndexFromFile = parts[1].toIntOrNull() ?: 0
-                items.add(PdfSegment(parts[0], pdfName, author, segmentIndexFromFile))
+
+            // Split the content string at the last space to isolate the segment index
+            val lastIndex = content.lastIndexOf(" ")
+            if (lastIndex != -1) {
+                val text = content.substring(0, lastIndex)
+                val segmentIndexStr = content.substring(lastIndex + 1)
+
+                // Convert the segment index from string to integer
+                val segmentIndexFromFile = segmentIndexStr.toIntOrNull() ?: 0
+
+                val (author, pdfName) = processFileName(fileName)
+
+                // Create and add the new item
+                items.add(PdfSegment(text, pdfName, author, segmentIndexFromFile))
                 notifyItemInserted(items.size - 1)
             }
         }.addOnFailureListener {
@@ -61,17 +74,31 @@ class PdfSegmentAdapter(private val context: Context, private val interaction: P
     }
 
     private fun processFileName(fileName: String): Pair<String, String> {
-        val parts = fileName.split("-")
+        // Normalize the fileName by replacing all non-alphanumeric characters (except for periods marking extensions) with spaces
+        val normalizedFileName = fileName.replace(Regex("[\\s-_]+"), " ").trim()
 
-        // Assuming the author's name is always the first two parts split by '-'
-        val author = if (parts.size >= 2) "${parts[0]} ${parts[1]}" else fileName
+        // Handling file extension removal
+        val fileWithoutExtension = if (normalizedFileName.endsWith(".txt")) normalizedFileName.dropLast(4) else normalizedFileName
 
-        // Combine the rest of the parts to form the full title and then take the first 50 characters
-        val fullTitle = parts.drop(2).joinToString("-").dropLast(4)  // Drop the last 4 characters to remove '.pdf'
-        var pdfName = if (fullTitle.length > 40) fullTitle.substring(0, 40) else fullTitle
-        if (pdfName.length == 40) pdfName += "..."  // Add ellipsis if the title was truncated
+        // Split by space after removing the extension
+        val parts = fileWithoutExtension.split(Regex("\\s+"))
+
+        // Assuming the author's name is always the first two parts
+        val author = if (parts.size >= 2) "${parts[0]} ${parts[1]}" else fileWithoutExtension
+
+        // Combine the rest of the parts to form the full title
+        val fullTitle = parts.drop(2).joinToString(" ")
+
+        // Check if the full title is less than or equal to 40 characters
+        var pdfName = if (fullTitle.length <= 40) fullTitle else {
+            val truncatedTitle = fullTitle.substring(0, 40)
+            if (truncatedTitle.length == 40) "$truncatedTitle..." else truncatedTitle // Add ellipsis if truncated
+        }
+
         return Pair(author, pdfName)
     }
+
+
 
     data class PdfSegment(
         val fileName: String,
