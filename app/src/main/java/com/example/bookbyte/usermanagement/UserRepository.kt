@@ -9,7 +9,7 @@ import com.google.firebase.database.ValueEventListener
 
 class UserRepository {
 
-    private lateinit var auth: FirebaseAuth
+    private var auth = FirebaseAuth.getInstance()
     private val apiURL = "https://habit-building-reading-a-bfcfb-default-rtdb.europe-west1.firebasedatabase.app/"
     private val databaseReference = FirebaseDatabase.getInstance(apiURL)
 
@@ -55,7 +55,7 @@ class UserRepository {
 
     // Could be redundant code
     fun getCurrentUser(): FirebaseUser? {
-        return FirebaseAuth.getInstance().currentUser
+        return auth.currentUser
     }
 
 }

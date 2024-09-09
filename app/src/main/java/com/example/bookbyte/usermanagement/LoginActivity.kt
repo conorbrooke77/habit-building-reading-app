@@ -11,16 +11,8 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
-import androidx.lifecycle.ViewModel
-import com.example.bookbyte.App
 import com.example.bookbyte.R
 import com.example.bookbyte.UserLibraryActivity
-import com.example.bookbyte.utils.DataResult
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 
 class LoginActivity : AppCompatActivity() {
 
@@ -63,12 +55,14 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun navigateToRegisterActivity(view: View) {
         val intent = Intent(this, RegisterActivity::class.java)
         startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
     }
+    @Suppress("UNUSED_PARAMETER")
     fun navigateToForgotPasswordActivity(view: View) {
-        val intent = Intent(this, RegisterActivity::class.java)
+        val intent = Intent(this, ForgotPasswordActivity::class.java)
         startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
     }
 
