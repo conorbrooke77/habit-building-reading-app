@@ -8,11 +8,14 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
+import androidx.lifecycle.ViewModel
 import com.example.bookbyte.App
 import com.example.bookbyte.R
 import com.example.bookbyte.UserLibraryActivity
+import com.example.bookbyte.utils.DataResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -26,6 +29,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var editTextPassword: EditText
     private lateinit var loginBtn: AppCompatButton
     private lateinit var progressBar: ProgressBar
+    private val viewModel: LoginViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,12 +41,25 @@ class LoginActivity : AppCompatActivity() {
         loginBtn = findViewById(R.id.buttonLogin)
         progressBar = findViewById(R.id.progressBar)
 
+        viewModel.loginResult.observe(this) { result ->
+            progressBar.visibility = View.GONE
+
+            if (result.success) {
+                Toast.makeText(this, "Login Successful.", Toast.LENGTH_SHORT).show()
+                //TODO : Check for transition effect
+                startActivity(Intent(this, UserLibraryActivity::class.java))
+                finish()
+            } else
+                Toast.makeText(this, result.errorMessage, Toast.LENGTH_SHORT).show()
+        }
+
         loginBtn.setOnClickListener {
             progressBar.visibility = View.VISIBLE
 
             val username = editTextUsername.text.toString().trim()
             val password = editTextPassword.text.toString().trim()
 
+            viewModel.login(username, password)
         }
     }
 

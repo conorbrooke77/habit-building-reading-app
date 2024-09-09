@@ -46,17 +46,9 @@ class UserRepository {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener() { task ->
                 // Checks if the sign in was successful
-                if (task.isSuccessful) {
+                if (task.isSuccessful)
                     callback(true,"Login Successful!")
-
-//                    if (FirebaseAuth.getInstance().currentUser != null) {
-//                        App.updateStreakIfNeeded(this)
-//                    }
-                    // Proceed to your main activity or dashboard
-//                    val intent = Intent(this, UserLibraryActivity::class.java)
-//                    startActivity(intent)
-//                    finish()
-                } else
+                else
                     callback(false,"Authentication failed!")
             }
     }
