@@ -18,9 +18,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     // Public immutable LiveData for external use
     val loginResult: LiveData<DataResult> = _loginResult
 
-    // TODO : Prevent code injection in login below
     fun login(userCredentials: String, password: String) {
-        //TODO : Validation checks
 
         if (!ValidationUtils.validateCredentials(userCredentials, password))
             _loginResult.postValue(DataResult(true, "Invalid Credentials"))

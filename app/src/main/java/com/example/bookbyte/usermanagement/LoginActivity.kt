@@ -27,7 +27,6 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var loginBtn: AppCompatButton
     private lateinit var progressBar: ProgressBar
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -44,17 +43,14 @@ class LoginActivity : AppCompatActivity() {
             val username = editTextUsername.text.toString().trim()
             val password = editTextPassword.text.toString().trim()
 
-            // Attempt to log in
-            //loginWithUsername(username, password)
-        }
-
-        forgotPasswordBtn.setOnClickListener {
-            val intent = Intent(this, ForgotPasswordActivity::class.java)
-            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
         }
     }
 
-    fun navigateToRegister(view: View) {
+    fun navigateToRegisterActivity(view: View) {
+        val intent = Intent(this, RegisterActivity::class.java)
+        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
+    }
+    fun navigateToForgotPasswordActivity(view: View) {
         val intent = Intent(this, RegisterActivity::class.java)
         startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
     }
