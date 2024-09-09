@@ -1,4 +1,4 @@
-package com.example.bookbyte
+package com.example.bookbyte.usermanagement
 
 import android.app.ActivityOptions
 import android.content.Intent
@@ -10,6 +10,8 @@ import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
+import com.example.bookbyte.DifficultySelectionActivity
+import com.example.bookbyte.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 
@@ -42,7 +44,9 @@ class RegisterActivity : AppCompatActivity() {
         buttonRegister.setOnClickListener {
             progressBar.visibility = View.VISIBLE
 
+            // TODO : Prevent duplicate usernames to stop emails being exposed
             var username = editTextUsername.text.toString().trim()
+
             var email = editTextEmail.text.toString().trim()
             var password = editTextPassword.text.toString().trim()
             var confirmPassword = editTextConfirmPassword.text.toString().trim()
@@ -53,6 +57,8 @@ class RegisterActivity : AppCompatActivity() {
                 Toast.makeText(this, "Email is blank", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+
+            //TODO : Change to use ValidationUtils
 
             // Regex pattern for validating the email
             val emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"

@@ -11,6 +11,7 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.OpenableColumns
+import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -133,7 +134,7 @@ class PdfUploadActivity : AppCompatActivity() {
 
 
         uploadTask.addOnSuccessListener {
-            DEBUG.consoleMessage("Upload Successful : PdfUploadActivity")
+            Log.i("DEBUG", "Upload Successful : PdfUploadActivity")
 
             val intent = Intent(this, UserLibraryActivity::class.java).apply {
                 putExtra("FILE_NAME", pdfName)
@@ -143,7 +144,7 @@ class PdfUploadActivity : AppCompatActivity() {
             startActivity(intent)
 
         }.addOnFailureListener {
-            DEBUG.consoleMessage("Upload Failed : PdfUploadActivity")
+            Log.i("DEBUG", "Upload Failed : PdfUploadActivity")
 
         }.addOnProgressListener {
             // You can use this to show upload progress

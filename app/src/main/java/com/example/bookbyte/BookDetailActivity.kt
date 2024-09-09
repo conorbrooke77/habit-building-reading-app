@@ -102,7 +102,7 @@ class BookDetailActivity : AppCompatActivity() {
 
 
         uploadTask.addOnSuccessListener {
-            DEBUG.consoleMessage("Upload Successful : PdfUploadActivity")
+            Log.i("DEBUG", "Upload Successful : PdfUploadActivity")
             progressBar.visibility = View.GONE
 
             val intent = Intent(this, UserLibraryActivity::class.java).apply {
@@ -113,8 +113,7 @@ class BookDetailActivity : AppCompatActivity() {
             startActivity(intent)
 
         }.addOnFailureListener {
-            DEBUG.consoleMessage("Upload Failed : PdfUploadActivity")
-
+            Log.i("DEBUG", "Upload Failed : PdfUploadActivity")
         }.addOnProgressListener {
             // You can use this to show upload progress
         }

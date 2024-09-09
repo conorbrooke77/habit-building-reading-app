@@ -22,7 +22,8 @@ class App: Application() {
     override fun onCreate() {
         super.onCreate()
         FirebaseApp.initializeApp(this)
-        DEBUG.consoleMessage("App is Initialized")
+        Log.i("DEBUG", "consoleMessage: App is Initialized")
+
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as? AlarmManager
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {

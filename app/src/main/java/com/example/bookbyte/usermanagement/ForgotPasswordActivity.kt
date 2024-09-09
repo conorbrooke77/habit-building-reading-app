@@ -1,4 +1,4 @@
-package com.example.bookbyte
+package com.example.bookbyte.usermanagement
 
 import android.app.ActivityOptions
 import android.content.Intent
@@ -9,6 +9,7 @@ import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
+import com.example.bookbyte.R
 import com.google.firebase.auth.FirebaseAuth
 
 class ForgotPasswordActivity : AppCompatActivity() {
