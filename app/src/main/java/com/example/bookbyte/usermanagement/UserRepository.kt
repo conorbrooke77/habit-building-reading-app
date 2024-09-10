@@ -12,6 +12,8 @@ class UserRepository {
     private var auth = FirebaseAuth.getInstance()
     private val apiURL = "https://habit-building-reading-a-bfcfb-default-rtdb.europe-west1.firebasedatabase.app/"
     private val databaseReference = FirebaseDatabase.getInstance(apiURL)
+    val currentUser: FirebaseUser?
+        get() = FirebaseAuth.getInstance().currentUser
 
      fun loginWithUsername(username: String, password: String, callback: (Boolean, String) -> Unit) {
 
@@ -44,7 +46,7 @@ class UserRepository {
 
      fun loginWithEmail(email: String, password: String, callback: (Boolean, String) -> Unit) {
         auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener() { task ->
+            .addOnCompleteListener { task ->
                 // Checks if the sign in was successful
                 if (task.isSuccessful)
                     callback(true,"Login Successful!")
@@ -53,9 +55,28 @@ class UserRepository {
             }
     }
 
-    // Could be redundant code
-    fun getCurrentUser(): FirebaseUser? {
-        return auth.currentUser
-    }
+    fun createUser(username: String, email: String, password: String, callback: (Boolean, String) -> Unit) {
+        auth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
 
+                    val userId = currentUser?.uid ?: ""
+                    val user = User(username, email, userId)
+
+                    databaseReference.getReference("Users").child(userId).setValue(user).addOnCompleteListener { userTask ->
+                        // User details are successfully saved in the database
+                        if (userTask.isSuccessful)
+                            callback(true, "Account Created. User details saved.")
+                        else {
+                            // Handle the error in saving user details
+                            userTask.exception?.let {
+                                callback(true, "Failed to save user details: ${it.message}") }
+                        }
+                    }
+                } else {
+                    // If sign in fails, display a message to the user.
+                    callback(true, "Authentication failed.")
+                }
+            }
+    }
 }

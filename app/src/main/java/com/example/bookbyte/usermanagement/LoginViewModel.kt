@@ -20,8 +20,11 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
     fun login(userCredentials: String, password: String) {
 
-        if (!ValidationUtils.validateCredentials(userCredentials, password))
-            _loginResult.postValue(DataResult(false, "Invalid Credentials"))
+        val validationInfo = ValidationUtils.validateCredentials(userCredentials, password)
+        if (!validationInfo.first) {
+            _loginResult.postValue(DataResult(false, validationInfo.second))
+            return
+        }
 
         if (ValidationUtils.isValidEmail(userCredentials)) {
             userRepository.loginWithEmail(userCredentials, password) { success, message ->
