@@ -77,7 +77,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/open_sans_bold"
-                android:text="Login"
+                android:text="Sign In"
                 android:textColor="@color/black"
                 android:textSize="32sp" />
 

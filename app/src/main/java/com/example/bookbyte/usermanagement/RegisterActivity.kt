@@ -38,17 +38,16 @@ class RegisterActivity : AppCompatActivity() {
             progressBar.visibility = View.GONE
 
             if (results.success) {
-                Toast.makeText(this, results.errorMessage, Toast.LENGTH_LONG).show()
+                Toast.makeText(this, results.message, Toast.LENGTH_LONG).show()
                 startActivity(Intent(this, DifficultySelectionActivity::class.java))
                 finish()
             } else
-                Toast.makeText(this, results.errorMessage, Toast.LENGTH_LONG).show()
+                Toast.makeText(this, results.message, Toast.LENGTH_LONG).show()
         }
 
         buttonRegister.setOnClickListener {
             progressBar.visibility = View.VISIBLE
 
-            // TODO : Prevent duplicate usernames to stop emails being exposed
             val username = editTextUsername.text.toString().trim()
             val email = editTextEmail.text.toString().trim()
             val password = editTextPassword.text.toString().trim()

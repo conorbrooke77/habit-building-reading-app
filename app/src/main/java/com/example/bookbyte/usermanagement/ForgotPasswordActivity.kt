@@ -8,52 +8,49 @@ import android.view.View
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.widget.AppCompatButton
 import com.example.bookbyte.R
-import com.google.firebase.auth.FirebaseAuth
 
 class ForgotPasswordActivity : AppCompatActivity() {
     private lateinit var editTextEmail: EditText
-    private lateinit var editTextPassword: EditText
     private lateinit var buttonResetPassword: AppCompatButton
     private lateinit var progressBar: ProgressBar
 
-    private lateinit var auth: FirebaseAuth
+    private val viewModel: ForgotPasswordViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_forgot_password)
 
         editTextEmail = findViewById(R.id.editTextEmail)
-        editTextPassword = findViewById(R.id.editTextPassword)
         buttonResetPassword = findViewById(R.id.buttonResetPassword)
         progressBar = findViewById(R.id.progressBar)
-        auth = FirebaseAuth.getInstance()
 
-        progressBar.visibility = View.GONE // Initially hide the progressBar
+        progressBar.visibility = View.GONE
+
+        viewModel.forgotPasswordResults.observe(this) { results ->
+            progressBar.visibility = View.GONE
+
+            if (results.success) {
+                Toast.makeText(this, results.message, Toast.LENGTH_LONG).show()
+
+                val intent = Intent(this, LoginActivity::class.java)
+                startActivity(intent)
+                finish()
+            } else
+                Toast.makeText(this, results.message, Toast.LENGTH_LONG).show()
+        }
 
         buttonResetPassword.setOnClickListener {
-            val email = editTextEmail.text.toString().trim()
-
-            if (email.isEmpty()) {
-                editTextEmail.error = "Email is required."
-                editTextEmail.requestFocus()
-                return@setOnClickListener
-            }
             progressBar.visibility = View.VISIBLE
-            auth.sendPasswordResetEmail(email).addOnCompleteListener { task ->
-                progressBar.visibility = View.GONE
-                if (task.isSuccessful) {
-                    Toast.makeText(baseContext, "Check your email to reset your password.", Toast.LENGTH_LONG).show()
-                    val intent = Intent(this, LoginActivity::class.java)
-                    startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
-                } else {
-                    Toast.makeText(baseContext, "Failed to send reset email.", Toast.LENGTH_LONG).show()
-                }
-            }
+
+            val email = editTextEmail.text.toString().trim()
+            viewModel.sendPasswordResetEmail(email)
         }
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun navigateToRegister(view: View) {
         val intent = Intent(this, RegisterActivity::class.java)
         startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())

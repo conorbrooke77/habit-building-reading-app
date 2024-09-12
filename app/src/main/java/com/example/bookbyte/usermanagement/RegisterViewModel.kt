@@ -4,8 +4,10 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.bookbyte.utils.DataResult
 import com.example.bookbyte.utils.ValidationUtils
+import kotlinx.coroutines.launch
 
 class RegisterViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -15,14 +17,27 @@ class RegisterViewModel(application: Application) : AndroidViewModel(application
 
     fun register(username: String, email: String, password: String, confirmPassword: String) {
 
-        val validationInfo = ValidationUtils.validateCredentials(username, email, password, confirmPassword)
-        if (!validationInfo.first) {
-            _registerResults.postValue(DataResult(false, validationInfo.second))
-            return
-        }
+        viewModelScope.launch {
+            // Check if the username is unique asynchronously
+            val isUnique = userRepository.isUniqueUsername(username)
 
-        userRepository.createUser(username, email, password) {success, message ->
-                _registerResults.postValue(DataResult(success, message))
+            if (!isUnique) {
+                _registerResults.postValue(DataResult(false, "Username already exists!"))
+                return@launch
+            }
+
+            // Perform synchronous validation
+            val validationInfo =
+                ValidationUtils.validateCredentials(username, email, password, confirmPassword)
+            if (!validationInfo.first) {
+                _registerResults.postValue(DataResult(false, validationInfo.second))
+                return@launch
+            }
+
+            // Create the user and post the result asynchronously
+            val createUserResults = userRepository.createUser(username, email, password)
+
+            _registerResults.postValue(DataResult(createUserResults.first, createUserResults.second))
         }
     }
 }

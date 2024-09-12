@@ -1,6 +1,5 @@
 package com.example.bookbyte.usermanagement
 
-import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -37,12 +36,11 @@ class LoginActivity : AppCompatActivity() {
             progressBar.visibility = View.GONE
 
             if (result.success) {
-                Toast.makeText(this, "Login Successful.", Toast.LENGTH_SHORT).show()
-                //TODO : Check for transition effect
+                Toast.makeText(this, result.message, Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this, UserLibraryActivity::class.java))
                 finish()
             } else
-                Toast.makeText(this, result.errorMessage, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, result.message, Toast.LENGTH_SHORT).show()
         }
 
         loginBtn.setOnClickListener {
@@ -58,12 +56,12 @@ class LoginActivity : AppCompatActivity() {
     @Suppress("UNUSED_PARAMETER")
     fun navigateToRegisterActivity(view: View) {
         val intent = Intent(this, RegisterActivity::class.java)
-        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
+        startActivity(intent)
     }
     @Suppress("UNUSED_PARAMETER")
     fun navigateToForgotPasswordActivity(view: View) {
         val intent = Intent(this, ForgotPasswordActivity::class.java)
-        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
+        startActivity(intent)
     }
 
 }

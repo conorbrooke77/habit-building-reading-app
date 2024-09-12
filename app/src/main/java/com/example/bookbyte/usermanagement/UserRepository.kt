@@ -6,6 +6,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import kotlinx.coroutines.tasks.await
 
 class UserRepository {
 
@@ -49,34 +50,44 @@ class UserRepository {
             .addOnCompleteListener { task ->
                 // Checks if the sign in was successful
                 if (task.isSuccessful)
-                    callback(true,"Login Successful!")
+                    callback(true,"Sign In Successful!")
                 else
                     callback(false,"Authentication failed!")
             }
     }
 
-    fun createUser(username: String, email: String, password: String, callback: (Boolean, String) -> Unit) {
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
+    suspend fun createUser(username: String, email: String, password: String) : Pair<Boolean, String> {
 
-                    val userId = currentUser?.uid ?: ""
-                    val user = User(username, email, userId)
+        return try {
+            val authResults = auth.createUserWithEmailAndPassword(email, password).await()
+            val userId = authResults.user?.uid ?: throw Exception("User ID not found")
 
-                    databaseReference.getReference("Users").child(userId).setValue(user).addOnCompleteListener { userTask ->
-                        // User details are successfully saved in the database
-                        if (userTask.isSuccessful)
-                            callback(true, "Account Created. User details saved.")
-                        else {
-                            // Handle the error in saving user details
-                            userTask.exception?.let {
-                                callback(true, "Failed to save user details: ${it.message}") }
-                        }
-                    }
-                } else {
-                    // If sign in fails, display a message to the user.
-                    callback(true, "Authentication failed.")
-                }
-            }
+            val user = User(username, email, userId)
+
+            databaseReference.getReference("Users").child(userId).setValue(user).await()
+            //Saving username to usernames node in database for future referencing unique usernames
+            databaseReference.getReference("usernames").child(username).setValue(true).await()
+
+            Pair(true, "Account Created. User details saved.")
+        } catch (e: Exception) {
+            auth.currentUser?.delete()?.await()
+
+            Pair(false, "Failed to create user or save details: ${e.message}")
+        }
     }
+
+    suspend fun sendPasswordResetEmail(email: String) : Pair<Boolean, String> {
+        return try {
+            auth.sendPasswordResetEmail(email).await()
+            Pair(true, "Check your email to reset your password.")
+        } catch (e: Exception) {
+            Pair(false, "Failed to send reset email. Error: $e")
+        }
+    }
+
+    suspend fun isUniqueUsername(username: String): Boolean {
+        val snapshot = databaseReference.getReference("usernames").get().await()
+        return !snapshot.hasChild(username)
+    }
+
 }
