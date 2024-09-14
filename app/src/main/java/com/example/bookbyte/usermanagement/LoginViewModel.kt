@@ -5,8 +5,9 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.bookbyte.App
-import com.example.bookbyte.utils.DataResult
-import com.example.bookbyte.utils.ValidationUtils
+import com.example.bookbyte.usermanagement.data.repository.UserRepository
+import com.example.bookbyte.shared.utils.data.models.DataResult
+import com.example.bookbyte.shared.utils.validation.ValidationUtils
 
 class LoginViewModel(application: Application) : AndroidViewModel(application) {
 

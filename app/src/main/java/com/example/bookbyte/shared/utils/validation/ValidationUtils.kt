@@ -1,4 +1,4 @@
-package com.example.bookbyte.utils
+package com.example.bookbyte.shared.utils.validation
 
 object ValidationUtils {
     fun isValidEmail(email: String): Boolean {

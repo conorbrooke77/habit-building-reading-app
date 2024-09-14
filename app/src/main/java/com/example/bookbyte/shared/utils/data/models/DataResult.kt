@@ -1,4 +1,4 @@
-package com.example.bookbyte.utils
+package com.example.bookbyte.shared.utils.data.models
 
 data class DataResult (
     val success: Boolean,

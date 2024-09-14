@@ -1,5 +1,6 @@
-package com.example.bookbyte.usermanagement
+package com.example.bookbyte.usermanagement.data.repository
 
+import com.example.bookbyte.usermanagement.data.models.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DataSnapshot
