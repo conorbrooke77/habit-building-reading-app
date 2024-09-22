@@ -11,7 +11,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import com.example.bookbyte.R
-import com.example.bookbyte.UserLibraryActivity
+import com.example.bookbyte.ui.UserLibraryActivity
 
 class LoginActivity : AppCompatActivity() {
 

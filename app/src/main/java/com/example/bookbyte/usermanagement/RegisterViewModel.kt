@@ -5,9 +5,9 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.bookbyte.usermanagement.data.repository.UserRepository
-import com.example.bookbyte.shared.utils.data.models.DataResult
-import com.example.bookbyte.shared.utils.validation.ValidationUtils
+import com.example.bookbyte.data.repository.UserRepository
+import com.example.bookbyte.common.DataResult
+import com.example.bookbyte.common.utils.ValidationUtils
 import kotlinx.coroutines.launch
 
 class RegisterViewModel(application: Application) : AndroidViewModel(application) {

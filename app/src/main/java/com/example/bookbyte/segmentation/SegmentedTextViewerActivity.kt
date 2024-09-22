@@ -10,11 +10,11 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.example.bookbyte.App
+import com.example.bookbyte.app.App
 import com.example.bookbyte.R
-import com.example.bookbyte.SettingsActivity
-import com.example.bookbyte.StatisticsUpdater
-import com.example.bookbyte.UserLibraryActivity
+import com.example.bookbyte.ui.SettingsActivity
+import com.example.bookbyte.ui.StatisticsUpdater
+import com.example.bookbyte.ui.UserLibraryActivity
 import com.github.barteksc.pdfviewer.PDFView
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth

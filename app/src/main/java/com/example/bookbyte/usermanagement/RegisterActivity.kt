@@ -10,7 +10,7 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.widget.AppCompatButton
-import com.example.bookbyte.DifficultySelectionActivity
+import com.example.bookbyte.ui.DifficultySelectionActivity
 import com.example.bookbyte.R
 
 class RegisterActivity : AppCompatActivity() {

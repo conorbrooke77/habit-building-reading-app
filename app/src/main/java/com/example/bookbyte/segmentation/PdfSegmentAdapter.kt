@@ -10,7 +10,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.example.bookbyte.PdfSegmentInteraction
+import com.example.bookbyte.ui.PdfSegmentInteraction
 import com.example.bookbyte.R
 import com.google.firebase.storage.FirebaseStorage
 

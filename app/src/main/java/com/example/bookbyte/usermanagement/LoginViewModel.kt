@@ -4,14 +4,11 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.bookbyte.App
-import com.example.bookbyte.usermanagement.data.repository.UserRepository
-import com.example.bookbyte.shared.utils.data.models.DataResult
-import com.example.bookbyte.shared.utils.validation.ValidationUtils
+import com.example.bookbyte.common.DataResult
+import com.example.bookbyte.common.utils.ValidationUtils
 
 class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val userRepository = UserRepository()
 
     // Private mutable LiveData for internal use
     private val _loginResult = MutableLiveData<DataResult>()
@@ -27,21 +24,21 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
             return
         }
 
-        if (ValidationUtils.isValidEmail(userCredentials)) {
-            userRepository.loginWithEmail(userCredentials, password) { success, message ->
-                if (success)
-                    App.updateStreakIfNeeded(getApplication())
-
-                _loginResult.postValue(DataResult(success, message))
-            }
-        } else {
-            userRepository.loginWithUsername(userCredentials, password) { success, message ->
-                if (success)
-                    App.updateStreakIfNeeded(getApplication())
-
-                _loginResult.postValue(DataResult(success, message))
-            }
-        }
+//        if (ValidationUtils.isValidEmail(userCredentials)) {
+//            userRepository.loginWithEmail(userCredentials, password) { success, message ->
+//                if (success)
+//                    App.updateStreakIfNeeded(getApplication())
+//
+//                _loginResult.postValue(DataResult(success, message))
+//            }
+//        } else {
+//            userRepository.loginWithUsername(userCredentials, password) { success, message ->
+//                if (success)
+//                    App.updateStreakIfNeeded(getApplication())
+//
+//                _loginResult.postValue(DataResult(success, message))
+//            }
+//        }
     }
 
 }

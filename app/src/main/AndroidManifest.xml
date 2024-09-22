@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
-        android:name=".App"
+        android:name=".app.App"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -20,17 +20,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BookByte">
         <activity
-            android:name=".GeneralSettingsActivity"
+            android:name=".ui.GeneralSettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".StatisticsActivity"
+            android:name=".ui.StatisticsActivity"
             android:exported="false" />
         <activity
-            android:name=".AdjustSegments"
+            android:name=".ui.AdjustSegments"
             android:exported="false" />
 
         <receiver
-            android:name=".ReminderBroadcastReceiver"
+            android:name=".ui.ReminderBroadcastReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -38,13 +38,13 @@
         </receiver>
 
         <activity
-            android:name=".ProfileActivity"
+            android:name=".ui.ProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".UserLibraryActivity"
+            android:name=".ui.UserLibraryActivity"
             android:exported="false" />
         <activity
-            android:name=".DifficultySelectionActivity"
+            android:name=".ui.DifficultySelectionActivity"
             android:exported="false" />
         <activity
             android:name=".usermanagement.ForgotPasswordActivity"
@@ -53,18 +53,18 @@
             android:name=".usermanagement.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".BookDetailActivity"
+            android:name=".ui.BookDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".GutenbergLibraryActivity"
+            android:name=".ui.GutenbergLibraryActivity"
             android:exported="false"
             android:label="@string/title_activity_library"
             android:theme="@style/Theme.BookByte" />
         <activity
-            android:name=".SettingsActivity"
+            android:name=".ui.SettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".PdfUploadActivity"
+            android:name=".ui.PdfUploadActivity"
             android:exported="false" />
         <activity
             android:name=".segmentation.SegmentedTextViewerActivity"
